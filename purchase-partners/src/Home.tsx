@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropsExample from "./props-example";
 
 function Home() {
     const [a, setA] = useState(1);
@@ -24,6 +25,7 @@ function Home() {
                 <div key={index}>{item}</div>
             ))}
             <button onClick={handleClick}>Click Me</button>
+            <PropsExample age={4} />
         </div>
     );
 }
