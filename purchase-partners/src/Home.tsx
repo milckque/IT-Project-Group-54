@@ -26,6 +26,10 @@ function Home() {
             ))}
             <button onClick={handleClick}>Click Me</button>
             <PropsExample age={4} />
+
+            <div className="tailwind_example bg-blue-500 text-black m-12 p-4 rounded">
+                hello
+            </div>
         </div>
     );
 }
