@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ExamplePage from './ExamplePage';
 import Hello from "./Hello";
 import Home from "./Home";
+import BackendTest from "./BackendTest";
 
 function App() {
     return (
@@ -19,6 +20,10 @@ function App() {
                     <Route
                         path="/example"
                         element={<ExamplePage />}
+                    />
+                    <Route
+                        path="/backend-test"
+                        element={<BackendTest />}
                     />
                     <Route
                         path="*"
