@@ -4,6 +4,7 @@ import Hello from "./pages/dev-examples/Hello";
 import Home from "./pages/dev-examples/Home";
 import Landing from "./pages/landing/landing";
 import BuyingGroupDashboard from "./pages/buying-group-dashboard/buying-group-dashboard";
+import CreateGroup from "./pages/create-group/create-group";
 
 function App() {
     return (
@@ -17,6 +18,10 @@ function App() {
                     <Route
                         path="/dashboard"
                         element={<BuyingGroupDashboard />}
+                    />
+                    <Route
+                        path="/create-group"
+                        element={<CreateGroup />}
                     />
                     <Route
                         path="/home"
