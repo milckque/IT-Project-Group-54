@@ -3,6 +3,9 @@ import ExamplePage from './pages/dev-examples/ExamplePage';
 import Hello from "./pages/dev-examples/Hello";
 import Home from "./pages/dev-examples/Home";
 import BackendTest from "./BackendTest";
+import Landing from "./pages/landing/landing";
+import BuyingGroupDashboard from "./pages/buying-group-dashboard/buying-group-dashboard";
+import CreateGroup from "./pages/create-group/create-group";
 
 function App() {
     return (
@@ -11,6 +14,18 @@ function App() {
                 <Routes>
                     <Route
                         path="/"
+                        element={<Landing />}
+                    />
+                    <Route
+                        path="/dashboard"
+                        element={<BuyingGroupDashboard />}
+                    />
+                    <Route
+                        path="/create-group"
+                        element={<CreateGroup />}
+                    />
+                    <Route
+                        path="/home"
                         element={<Home />}
                     />
                     <Route
