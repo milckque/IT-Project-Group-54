@@ -1,3 +1,4 @@
+import Navbar from "../../components/navbar/navbar";
 
 function BuyingGroupDashboard() {
 
@@ -7,9 +8,7 @@ function BuyingGroupDashboard() {
 
     return (
         <div className="dashboard-page flex flex-col size-full">
-            <div className="bg-black text-white">
-                nav bar
-            </div>
+            <Navbar /> 
             <div className="header h-6 bg-yellow-50">
                 create group and search bar
             </div>
