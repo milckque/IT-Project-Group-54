@@ -2,11 +2,21 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { z } from "zod";
+import {
+  CitySelect,
+  CountrySelect,
+  StateSelect,
+  LanguageSelect,
+  RegionSelect,
+  PhonecodeSelect,
+} from "react-country-state-city";
+import "react-country-state-city/dist/react-country-state-city.css";
 
 type AuthMode = "signup" | "login";
 
 function buyerAccount() {
   const [active, setActive] = useState<AuthMode>("signup");
+  const [countryid, setCountryid] = useState(0);
 
   return (
     <div className="flex w-full h-screen">
@@ -45,7 +55,7 @@ function buyerAccount() {
                 </button>
               </div>
 
-              <div className="m-5 flex items-center">
+              <div className="m-5 flex flex-col items-center">
                 {active === "signup" ? (
                   <form className="">
                     {/* first & last name */}
@@ -106,11 +116,25 @@ function buyerAccount() {
                         <label className="block font-poppins text-sm font-medium mb-1">
                           Country
                         </label>
-                        <input
+                        {/* <input
                           type="text"
                           placeholder="Name"
                           className="border w-80 p-2 rounded-lg"
-                        />
+                        /> */}
+                        <div className="border rounded-lg ">
+                          <CountrySelect
+                            containerClassName="form-group"
+                            inputClassName=""
+                            onChange={(country: any) => {
+                              setCountryid(country.id);
+                              console.log("Selected country:", country);
+                            }}
+                            onTextChange={(e) => {
+                              console.log(e);
+                            }}
+                            placeHolder="Select Country"
+                          />
+                        </div>
                       </div>
 
                       {/* postcode */}
@@ -120,7 +144,7 @@ function buyerAccount() {
                         </label>
                         <input
                           type="text"
-                          placeholder="postcode"
+                          placeholder="Postcode"
                           className="border w-80 p-2 rounded-lg"
                         />
                       </div>
@@ -159,6 +183,24 @@ function buyerAccount() {
                     />
                   </form>
                 )}
+
+                <div className="mt-10">
+                  {active === "signup" ? (
+                    <button
+                      className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl cursor-pointer text-1xl 
+                    text-white text-center font-inter font-medium flex items-center justify-center gap-2"
+                    >
+                      Sign up
+                    </button>
+                  ) : (
+                    <button
+                      className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl cursor-pointer text-1xl 
+                    text-white text-center font-inter font-medium flex items-center justify-center gap-2"
+                    >
+                      Log in
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
