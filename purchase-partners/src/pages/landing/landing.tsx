@@ -10,14 +10,18 @@ function Landing() {
           Looking to...
         </h1>
 
-        <div className="m-2 w-100 h-15 px-6 py-3 bg-black rounded-full shadow-lg hover:shadow-xl cursor-pointer text-2xl text-white text-center font-inter font-bold flex items-center justify-center gap-2">
+        <a
+          href="/buyer-account"
+          className="m-2 w-100 h-15 px-6 py-3 bg-black rounded-full shadow-lg hover:shadow-xl cursor-pointer text-2xl 
+                    text-white text-center font-inter font-bold flex items-center justify-center gap-2"
+        >
           <img src="./Bag_fill.svg" alt="Bag" />
-          SELL
-        </div>
+          BUY
+        </a>
 
         <div className="m-2 w-100 h-15 px-6 py-3 bg-white border-2 border-[#FFC107] rounded-full shadow-lg hover:shadow-xl cursor-pointer text-black text-2xl text-center font-inter font-bold flex items-center justify-center gap-2">
           <img src="./Shop.svg" alt="Shop" />
-          BUY
+          SELL
         </div>
 
         <a

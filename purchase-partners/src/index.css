@@ -25,14 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
+/* a {
   font-weight: 500;
   color: #ffc106;
   
   text-decoration: underline;
-}
+} */
 a:hover {
   color: #e0a000;
+  text-decoration: underline;
 }
 
 body {
