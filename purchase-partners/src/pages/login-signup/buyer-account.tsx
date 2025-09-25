@@ -2,32 +2,27 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
-import {
-  CitySelect,
-  CountrySelect,
-  StateSelect,
-  LanguageSelect,
-  RegionSelect,
-  PhonecodeSelect,
-} from "react-country-state-city";
+import { CountrySelect } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
 
 type AuthMode = "signup" | "login";
 
 const signupSchema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  email: z.email(),
+  firstName: z.string().min(1, { message: "First name is required" }),
+  lastName: z.string().min(1, { message: "Last name is required" }),
+  email: z.email({ message: "Invalid email address" }),
   phoneNumber: z.string().min(5),
   country: z.string().min(1),
   postcode: z.string().min(1),
   username: z.string().min(3).max(50),
-  password: z.string().min(8),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" }),
 });
 
 const loginSchema = z.object({
-  email: z.email(),
-  password: z.string().min(8),
+  email: z.email({ message: "Email address is required" }),
+  password: z.string().min(8, { message: "Incorrect password" }),
 });
 
 type SignupFields = z.infer<typeof signupSchema>;
@@ -36,24 +31,50 @@ type LoginFields = z.infer<typeof loginSchema>;
 function BuyerAccount() {
   const [active, setActive] = useState<AuthMode>("signup");
 
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<SignupFields | LoginFields>({
-    resolver: zodResolver(active === "signup" ? signupSchema : loginSchema),
+  // const {
+  //   register,
+  //   setValue,
+  //   handleSubmit,
+  //   setError,
+  //   formState: { errors, isSubmitting },
+  // } = useForm<SignupFields | LoginFields>({
+  //   resolver: zodResolver(active === "signup" ? signupSchema : loginSchema),
+  // });
+
+  const signupForm = useForm<SignupFields>({
+    resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit: SubmitHandler<SignupFields | LoginFields> = async (data) => {
+  const loginForm = useForm<LoginFields>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  // const onSubmit: SubmitHandler<SignupFields | LoginFields> = async (data) => {
+  //   try {
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     console.log(active, data);
+  //   } catch (error) {
+  //     setError("root", {
+  //       message: "This email is already taken",
+  //     });
+  //   }
+  // };
+
+  const handleSignupSubmit: SubmitHandler<SignupFields> = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log(active, data);
+      console.log("signup", data);
     } catch (error) {
-      setError("root", {
-        message: "This email is already taken",
-      });
+      signupForm.setError("root", { message: "This email is already taken" });
+    }
+  };
+
+  const handleLoginSubmit: SubmitHandler<LoginFields> = async (data) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("login", data);
+    } catch (error) {
+      loginForm.setError("root", { message: "This email is already taken" });
     }
   };
 
@@ -99,7 +120,7 @@ function BuyerAccount() {
                 {active === "signup" ? (
                   <form
                     className="flex flex-col items-center"
-                    onSubmit={handleSubmit(onSubmit)}
+                    onSubmit={signupForm.handleSubmit(handleSignupSubmit)}
                   >
                     {/* first & last name */}
                     <div className="flex gap-10">
@@ -109,11 +130,16 @@ function BuyerAccount() {
                           First Name
                         </label>
                         <input
-                          {...register("firstName")}
+                          {...signupForm.register("firstName")}
                           type="text"
                           placeholder="Name"
                           className="border w-80 p-2 rounded-lg"
                         />
+                        {signupForm.formState.errors.firstName && (
+                          <p className="text-red-500 text-sm">
+                            {signupForm.formState.errors.firstName.message}
+                          </p>
+                        )}
                       </div>
 
                       {/* last name */}
@@ -122,11 +148,16 @@ function BuyerAccount() {
                           Last Name
                         </label>
                         <input
-                          {...register("lastName")}
+                          {...signupForm.register("lastName")}
                           type="text"
                           placeholder="Name"
                           className="border w-80 p-2 rounded-lg"
                         />
+                        {signupForm.formState.errors.lastName && (
+                          <p className="text-red-500 text-sm">
+                            {signupForm.formState.errors.lastName.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -136,11 +167,16 @@ function BuyerAccount() {
                         Email
                       </label>
                       <input
-                        {...register("email")}
+                        {...signupForm.register("email")}
                         type="email"
                         placeholder="Email"
                         className="border w-170 p-2 rounded-lg"
                       />
+                      {signupForm.formState.errors.email && (
+                        <p className="text-red-500 text-sm">
+                          {signupForm.formState.errors.email.message}
+                        </p>
+                      )}
                     </div>
 
                     {/* phone number */}
@@ -149,7 +185,7 @@ function BuyerAccount() {
                         Phone number
                       </label>
                       <input
-                        {...register("phoneNumber")}
+                        {...signupForm.register("phoneNumber")}
                         type="tel"
                         placeholder="Phone number"
                         className="border w-170 p-2 rounded-lg"
@@ -168,7 +204,7 @@ function BuyerAccount() {
                             containerClassName="form-group"
                             inputClassName=""
                             onChange={(country: any) => {
-                              setValue("country", country.name, {
+                              signupForm.setValue("country", country.name, {
                                 shouldValidate: true,
                                 shouldDirty: true,
                               });
@@ -186,7 +222,7 @@ function BuyerAccount() {
                           Postcode
                         </label>
                         <input
-                          {...register("postcode")}
+                          {...signupForm.register("postcode")}
                           type="text"
                           placeholder="Postcode"
                           className="border w-80 p-2 rounded-lg"
@@ -200,7 +236,7 @@ function BuyerAccount() {
                         User name
                       </label>
                       <input
-                        {...register("username")}
+                        {...signupForm.register("username")}
                         type="text"
                         placeholder="User name"
                         className="border w-170 p-2 rounded-lg"
@@ -213,11 +249,16 @@ function BuyerAccount() {
                         Password
                       </label>
                       <input
-                        {...register("password")}
+                        {...signupForm.register("password")}
                         type="password"
                         placeholder="Password"
                         className="border w-170 p-2 rounded-lg"
                       />
+                      {signupForm.formState.errors.password && (
+                        <p className="text-red-500 text-sm">
+                          {signupForm.formState.errors.password.message}
+                        </p>
+                      )}
                     </div>
 
                     {/* submit button */}
@@ -227,7 +268,9 @@ function BuyerAccount() {
                         className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl hover:bg-[#ffc106] cursor-pointer text-1xl 
                     text-white text-center font-inter font-medium flex items-center justify-center gap-2"
                       >
-                        {isSubmitting ? "Loading..." : "Sign up"}
+                        {signupForm.formState.isSubmitting
+                          ? "Loading..."
+                          : "Sign up"}
                       </button>
                     </div>
                   </form>
@@ -235,7 +278,7 @@ function BuyerAccount() {
                   // log in form
                   <form
                     className="flex flex-col items-center"
-                    onSubmit={handleSubmit(onSubmit)}
+                    onSubmit={loginForm.handleSubmit(handleLoginSubmit)}
                   >
                     {/* email */}
                     <div className="mt-4">
@@ -243,11 +286,16 @@ function BuyerAccount() {
                         Email
                       </label>
                       <input
-                        {...register("email")}
+                        {...loginForm.register("email")}
                         type="email"
                         placeholder="Email"
                         className="border w-170 p-2 rounded-lg"
                       />
+                      {loginForm.formState.errors.email && (
+                        <p className="text-red-500 text-sm">
+                          {loginForm.formState.errors.email.message}
+                        </p>
+                      )}
                     </div>
 
                     {/* password */}
@@ -256,11 +304,16 @@ function BuyerAccount() {
                         Password
                       </label>
                       <input
-                        {...register("password")}
+                        {...loginForm.register("password")}
                         type="password"
                         placeholder="Password"
                         className="border w-170 p-2 rounded-lg"
                       />
+                      {loginForm.formState.errors.password && (
+                        <p className="text-red-500 text-sm">
+                          {loginForm.formState.errors.password.message}
+                        </p>
+                      )}
                     </div>
 
                     {/* submit button */}
@@ -270,7 +323,9 @@ function BuyerAccount() {
                         className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl hover:bg-[#ffc106] cursor-pointer text-1xl 
                     text-white text-center font-inter font-medium flex items-center justify-center gap-2"
                       >
-                        {isSubmitting ? "Loading..." : "Log in"}
+                        {loginForm.formState.isSubmitting
+                          ? "Loading..."
+                          : "Log in"}
                       </button>
                     </div>
                   </form>
