@@ -1,5 +1,8 @@
 import supabase from "../supabaseClient"
-export const getBuyingGroups = async (req, res) => {
+import type { Request, Response } from "express"
+import { getProfile } from "../utils/auth";
+
+export const getBuyingGroups = async (req: Request, res: Response) => {
     const { data: BuyingGroups, error } = await supabase
         .from("BuyingGroups")
         .select("*");
@@ -9,10 +12,10 @@ export const getBuyingGroups = async (req, res) => {
     if (error) {
         throw error;
     }
-    return res.status(200).json({success: true, data: BuyingGroups});
+    return res.status(200).json({ success: true, data: BuyingGroups });
 }
 
-export const getBuyingGroupInfo = async (req, res) => {
+export const getBuyingGroupInfo = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const { data: BuyingGroups, error } = await supabase
@@ -29,14 +32,16 @@ export const getBuyingGroupInfo = async (req, res) => {
     if (error) {
         throw error;
     }
+    return res.status(200).json({ success: true, data: BuyingGroups })
 }
 
 
-export const createBuyingGroup = async (req, res) => {
+export const createBuyingGroup = async (req: Request, res: Response) => {
     const { product_name, product_description, location } = req.body;
 
     const formattedName = formatProductName(product_name);
 
+    let productId;
     const { data: existingProduct } = await supabase
         .from("Products")
         .select("id")
@@ -71,51 +76,44 @@ export const createBuyingGroup = async (req, res) => {
     if (error) {
         throw error;
     }
-    
-    return res.status(201).json({success: true, data: newGroup})
+
+    return res.status(201).json({ success: true, data: newGroup })
 }
 
-export const joinBuyingGroup = async (req, res) => {
+export const joinBuyingGroup = async (req: Request, res: Response) => {
     const { group_id } = req.params;
-    
-    const user = await getUser(req);
 
-    if (!user) {
-        return res.status(401).json({ success: false, message: "Unauthorized" });
-    }
-
-    const { data: profile } = await supabase
-        .from("Profiles")
-        .select("id")
-        .eq("auth_id", user.id)
-        .single();
-
-    if (!profile) {
-        return res.status(404).json({ success: false, message: "Profile not found" });
+    let profile;
+    try {
+        profile = await getProfile(req);
+    } catch (error) {
+        return res.status(404).json({ success: false, error });
     }
 
     const { error } = await supabase
         .from("BuyingGroupMembers")
         .insert([{
-            group_id: parseInt(group_id),
-            buyer_id: profile.id
+            "group_id": group_id,
+            "buyer_id": profile.id
         }])
     if (error) {
         throw error;
     }
 
-    return res.status(201).json({ success: true, message: "joined buying group"})
+    return res.status(201).json({ success: true, message: "joined buying group" })
 }
 
-export const leaveBuyingGroup = async (req, res) => {
+export const leaveBuyingGroup = async (req: Request, res: Response) => {
     const { group_id } = req.params;
-    
-    const user = getUser;
-    
-    if (!user) {
-        return res.status(401).json({ success: false, message: "Unauthorized" });
+
+    let profile;
+    try {
+        profile = await getProfile(req);
+    } catch (error) {
+        return res.status(404).json({ success: false, error });
     }
 
+    const buyer_id = profile.id;
     const { error } = await supabase
         .from("BuyingGroupMembers")
         .delete()
@@ -127,24 +125,14 @@ export const leaveBuyingGroup = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 
-    return res.status(200).json({success: true, message: "left buying group"})
+    return res.status(200).json({ success: true, message: "left buying group" })
 }
 
 const formatProductName = (name: string): string => {
-  return name
-      .toLowerCase()
-          .split(' ')
-              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                  .join(' ');
+    return name
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 };
 
-const getUser = async (req) => { 
-    const { data: { user }, error: authError } = await supabase
-        .auth
-        .getUser(req.headers.authorization)
-
-    if (authError || !user) {
-        return null;
-    }
-    return user;
-}

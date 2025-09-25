@@ -14,3 +14,5 @@ router.get("/:id", getBuyingGroupInfo);
 router.post("/create", createBuyingGroup);
 router.post("/join/:group_id", joinBuyingGroup);
 router.delete("/leave/:group_id", leaveBuyingGroup);
+
+export default router;
