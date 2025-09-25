@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import {
   CitySelect,
@@ -14,9 +14,42 @@ import "react-country-state-city/dist/react-country-state-city.css";
 
 type AuthMode = "signup" | "login";
 
-function buyerAccount() {
+const schema = z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.email(),
+  phoneNumber: z.string().min(5),
+  country: z.string().min(1),
+  postcode: z.string().min(1),
+  username: z.string().min(1).max(50),
+  password: z.string().min(1),
+});
+
+type FormFields = z.infer<typeof schema>;
+
+function BuyerAccount() {
   const [active, setActive] = useState<AuthMode>("signup");
-  const [countryid, setCountryid] = useState(0);
+
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log(data);
+    } catch (error) {
+      setError("root", {
+        message: "This email is already taken",
+      });
+    }
+  };
 
   return (
     <div className="flex w-full h-screen">
@@ -55,9 +88,13 @@ function buyerAccount() {
                 </button>
               </div>
 
+              {/* form starts here */}
               <div className="m-5 flex flex-col items-center">
                 {active === "signup" ? (
-                  <form className="">
+                  <form
+                    className="flex flex-col items-center"
+                    onSubmit={handleSubmit(onSubmit)}
+                  >
                     {/* first & last name */}
                     <div className="flex gap-10">
                       {/* first name */}
@@ -66,6 +103,7 @@ function buyerAccount() {
                           First Name
                         </label>
                         <input
+                          {...register("firstName")}
                           type="text"
                           placeholder="Name"
                           className="border w-80 p-2 rounded-lg"
@@ -78,6 +116,7 @@ function buyerAccount() {
                           Last Name
                         </label>
                         <input
+                          {...register("lastName")}
                           type="text"
                           placeholder="Name"
                           className="border w-80 p-2 rounded-lg"
@@ -91,6 +130,7 @@ function buyerAccount() {
                         Email
                       </label>
                       <input
+                        {...register("email")}
                         type="email"
                         placeholder="Email"
                         className="border w-170 p-2 rounded-lg"
@@ -103,6 +143,7 @@ function buyerAccount() {
                         Phone number
                       </label>
                       <input
+                        {...register("phoneNumber")}
                         type="tel"
                         placeholder="Phone number"
                         className="border w-170 p-2 rounded-lg"
@@ -116,21 +157,17 @@ function buyerAccount() {
                         <label className="block font-poppins text-sm font-medium mb-1">
                           Country
                         </label>
-                        {/* <input
-                          type="text"
-                          placeholder="Name"
-                          className="border w-80 p-2 rounded-lg"
-                        /> */}
-                        <div className="border rounded-lg ">
+                        <div className="border rounded-lg w-80">
                           <CountrySelect
                             containerClassName="form-group"
                             inputClassName=""
                             onChange={(country: any) => {
-                              setCountryid(country.id);
-                              console.log("Selected country:", country);
-                            }}
-                            onTextChange={(e) => {
-                              console.log(e);
+                              setValue("country", country.name, {
+                                shouldValidate: true,
+                                shouldDirty: true,
+                              });
+                              // setCountryid(country.id);
+                              // console.log("Selected country:", country);
                             }}
                             placeHolder="Select Country"
                           />
@@ -143,6 +180,7 @@ function buyerAccount() {
                           Postcode
                         </label>
                         <input
+                          {...register("postcode")}
                           type="text"
                           placeholder="Postcode"
                           className="border w-80 p-2 rounded-lg"
@@ -156,6 +194,7 @@ function buyerAccount() {
                         User name
                       </label>
                       <input
+                        {...register("username")}
                         type="text"
                         placeholder="User name"
                         className="border w-170 p-2 rounded-lg"
@@ -168,10 +207,22 @@ function buyerAccount() {
                         Password
                       </label>
                       <input
-                        type="text"
+                        {...register("password")}
+                        type="password"
                         placeholder="Password"
                         className="border w-170 p-2 rounded-lg"
                       />
+                    </div>
+
+                    {/* submit button */}
+                    <div className="flex mt-10 items-center">
+                      <button
+                        type="submit"
+                        className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl cursor-pointer text-1xl 
+                    text-white text-center font-inter font-medium flex items-center justify-center gap-2"
+                      >
+                        {isSubmitting ? "Loading..." : "Sign up"}
+                      </button>
                     </div>
                   </form>
                 ) : (
@@ -184,13 +235,14 @@ function buyerAccount() {
                   </form>
                 )}
 
-                <div className="mt-10">
+                {/* <div className="mt-10">
                   {active === "signup" ? (
                     <button
+                      type="submit"
                       className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl cursor-pointer text-1xl 
                     text-white text-center font-inter font-medium flex items-center justify-center gap-2"
                     >
-                      Sign up
+                      {isSubmitting ? "Loading..." : "Sign up"}
                     </button>
                   ) : (
                     <button
@@ -200,7 +252,7 @@ function buyerAccount() {
                       Log in
                     </button>
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -221,4 +273,4 @@ function buyerAccount() {
 //   password: z.string().min(8),
 // });
 
-export default buyerAccount;
+export default BuyerAccount;
