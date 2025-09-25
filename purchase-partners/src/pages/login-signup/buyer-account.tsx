@@ -14,18 +14,24 @@ import "react-country-state-city/dist/react-country-state-city.css";
 
 type AuthMode = "signup" | "login";
 
-const schema = z.object({
+const signupSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   email: z.email(),
   phoneNumber: z.string().min(5),
   country: z.string().min(1),
   postcode: z.string().min(1),
-  username: z.string().min(1).max(50),
-  password: z.string().min(1),
+  username: z.string().min(3).max(50),
+  password: z.string().min(8),
 });
 
-type FormFields = z.infer<typeof schema>;
+const loginSchema = z.object({
+  email: z.email(),
+  password: z.string().min(8),
+});
+
+type SignupFields = z.infer<typeof signupSchema>;
+type LoginFields = z.infer<typeof loginSchema>;
 
 function BuyerAccount() {
   const [active, setActive] = useState<AuthMode>("signup");
@@ -36,14 +42,14 @@ function BuyerAccount() {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<FormFields>({
-    resolver: zodResolver(schema),
+  } = useForm<SignupFields | LoginFields>({
+    resolver: zodResolver(active === "signup" ? signupSchema : loginSchema),
   });
 
-  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+  const onSubmit: SubmitHandler<SignupFields | LoginFields> = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log(data);
+      console.log(active, data);
     } catch (error) {
       setError("root", {
         message: "This email is already taken",
@@ -59,7 +65,7 @@ function BuyerAccount() {
       ></div>
 
       <div className="flex-[5] bg-whtie items-center">
-        <div className="m-10 bg-[#E3DBD9]/50 p-6 rounded-xl">
+        <div className="m-5 bg-[#E3DBD9]/50 p-6 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="m-5 flex flex-col items-center">
               <div className="flex w-200 h-12 border-1 border-black rounded-lg overflow-hidden">
@@ -88,8 +94,8 @@ function BuyerAccount() {
                 </button>
               </div>
 
-              {/* form starts here */}
-              <div className="m-5 flex flex-col items-center">
+              {/* sign up form starts here */}
+              <div className="mt-8 flex flex-col items-center">
                 {active === "signup" ? (
                   <form
                     className="flex flex-col items-center"
@@ -218,7 +224,7 @@ function BuyerAccount() {
                     <div className="flex mt-10 items-center">
                       <button
                         type="submit"
-                        className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl cursor-pointer text-1xl 
+                        className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl hover:bg-[#ffc106] cursor-pointer text-1xl 
                     text-white text-center font-inter font-medium flex items-center justify-center gap-2"
                       >
                         {isSubmitting ? "Loading..." : "Sign up"}
@@ -226,33 +232,49 @@ function BuyerAccount() {
                     </div>
                   </form>
                 ) : (
-                  <form className=" flex flex-col gap-2">
-                    <input
-                      type="email"
-                      placeholder="Email"
-                      className="border p-2"
-                    />
+                  // log in form
+                  <form
+                    className="flex flex-col items-center"
+                    onSubmit={handleSubmit(onSubmit)}
+                  >
+                    {/* email */}
+                    <div className="mt-4">
+                      <label className="block font-poppins text-sm font-medium mb-1">
+                        Email
+                      </label>
+                      <input
+                        {...register("email")}
+                        type="email"
+                        placeholder="Email"
+                        className="border w-170 p-2 rounded-lg"
+                      />
+                    </div>
+
+                    {/* password */}
+                    <div className="mt-4">
+                      <label className="block font-poppins text-sm font-medium mb-1">
+                        Password
+                      </label>
+                      <input
+                        {...register("password")}
+                        type="password"
+                        placeholder="Password"
+                        className="border w-170 p-2 rounded-lg"
+                      />
+                    </div>
+
+                    {/* submit button */}
+                    <div className="flex mt-10 items-center">
+                      <button
+                        type="submit"
+                        className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl hover:bg-[#ffc106] cursor-pointer text-1xl 
+                    text-white text-center font-inter font-medium flex items-center justify-center gap-2"
+                      >
+                        {isSubmitting ? "Loading..." : "Log in"}
+                      </button>
+                    </div>
                   </form>
                 )}
-
-                {/* <div className="mt-10">
-                  {active === "signup" ? (
-                    <button
-                      type="submit"
-                      className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl cursor-pointer text-1xl 
-                    text-white text-center font-inter font-medium flex items-center justify-center gap-2"
-                    >
-                      {isSubmitting ? "Loading..." : "Sign up"}
-                    </button>
-                  ) : (
-                    <button
-                      className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl cursor-pointer text-1xl 
-                    text-white text-center font-inter font-medium flex items-center justify-center gap-2"
-                    >
-                      Log in
-                    </button>
-                  )}
-                </div> */}
               </div>
             </div>
           </div>
