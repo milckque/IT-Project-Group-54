@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ExamplePage from "./pages/dev-examples/ExamplePage";
-import Hello from "./pages/dev-examples/Hello";
+import SellerAccount from "./pages/login-signup/seller-account";
 import BuyerAccount from "./pages/login-signup/buyer-account";
 import Landing from "./pages/landing/landing";
 import BuyingGroupDashboard from "./pages/buying-group-dashboard/buying-group-dashboard";
@@ -15,7 +15,7 @@ function App() {
           <Route path="/dashboard" element={<BuyingGroupDashboard />} />
           <Route path="/create-group" element={<CreateGroup />} />
           <Route path="/buyer-account" element={<BuyerAccount />} />
-          <Route path="/hello" element={<Hello />} />
+          <Route path="/seller-account" element={<SellerAccount />} />
           <Route path="/example" element={<ExamplePage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
