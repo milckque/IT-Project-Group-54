@@ -1,10 +1,10 @@
 import express from "express";
 import {
-    getBuyingGroups,
-    getBuyingGroupInfo,
-    createBuyingGroup,
-    joinBuyingGroup,
-    leaveBuyingGroup
+  getBuyingGroups,
+  getBuyingGroupInfo,
+  createBuyingGroup,
+  joinBuyingGroup,
+  leaveBuyingGroup,
 } from "../controllers/buyingGroupController.ts";
 
 const router = express.Router();
