@@ -1,5 +1,6 @@
 import Navbar from "../../components/navbar/navbar";
-import z from "zod";
+import supabase from "../../supabaseClient";
+import z, { type ZodSafeParseResult } from "zod";
 
 // A lot of the form handling code is adapted from this video:
 // https://www.youtube.com/watch?v=_QpTQrxzY8A
@@ -12,7 +13,36 @@ const userSchema = z.object({
     description: z.string().optional(),
 });
 
+
 function CreateGroup() {
+
+    // This is very hacked together definitely needs to be improved
+    async function insertGroup(formValues: ZodSafeParseResult<any>) {
+        const productData = {
+            name: formValues.data.productName,
+            description: formValues.data.description || "",
+        }
+
+        console.log("Inserting product:", productData);
+        const { data: product } = await supabase
+            .from('Products')
+            .insert([productData])
+            .select()
+            .single();
+
+        const buyingGroupData = {
+            location: formValues.data.location,
+            active: true,
+            product_id: product.id 
+        }
+
+        console.log("Inserting group:", formValues.data);
+        const { data: buyingGroup } = await supabase
+            .from('BuyingGroups')
+            .insert([buyingGroupData])
+            .select()
+            .single();
+    }
 
     const handleSubmit = (formData: FormData) => {
         const formValues = Object.fromEntries(formData);
@@ -25,7 +55,7 @@ function CreateGroup() {
             // Handle successful form submission
             console.log("Form is valid:", result.data);
             // Can use stuff like result.data.productName
-            console.log("Product Name:", result.data.productName);
+            insertGroup(result);
         }
     };
 
