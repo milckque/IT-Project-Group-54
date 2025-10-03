@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import supabase from "../../supabaseClient";
 import CreateAndSearch from "../../components/create-and-search.tsx/create-and-search";
+import BuyingGroupCard from "./buying-group-card";
 
 type Product = {
     id: number;
@@ -45,11 +46,7 @@ function BuyingGroupDashboard() {
             <CreateAndSearch />
             <div className="grid grid-cols-2 gap-8 p-8">
                 {groups.map((item) => (
-                    <div key={item.id} className="group-card p-4 border-2 border-black rounded-lg">
-                        <h2 className="text-2xl font-bold mb-2">Buying Group {item.Products.name}</h2>
-                        <p className="mb-4">{item.Products.description}</p>
-                        <button className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">View Details</button>
-                    </div>
+                    <BuyingGroupCard key={item.id} group={item} />
                 ))}
             </div>
         </div>
@@ -57,3 +54,4 @@ function BuyingGroupDashboard() {
 }
 
 export default BuyingGroupDashboard;
+export type { Product, BuyingGroup };
