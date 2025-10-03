@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import supabase from "../../supabaseClient";
+import CreateAndSearch from "../../components/create-and-search.tsx/create-and-search";
 
 type Product = {
     id: number;
@@ -41,9 +42,7 @@ function BuyingGroupDashboard() {
     return (
         <div className="dashboard-page flex flex-col size-full">
             <Navbar /> 
-            <div className="header h-6 bg-yellow-50">
-                create group and search bar
-            </div>
+            <CreateAndSearch />
             <div className="grid grid-cols-2 gap-8 p-8">
                 {groups.map((item) => (
                     <div key={item.id} className="group-card p-4 border-2 border-black rounded-lg">
