@@ -9,6 +9,8 @@ import Landing from "./pages/landing/landing";
 import BuyingGroupDashboard from "./pages/buying-group-dashboard/buying-group-dashboard";
 import CreateGroup from "./pages/create-group/create-group";
 import SellerDashboard from "./pages/seller-dashboard/seller-dashboard";
+import JoinedGroups from "./pages/joined-created-groups/joined-groups";
+import CreatedGroups from "./pages/joined-created-groups/created-groups";
 
 function App() {
     // return (
@@ -71,6 +73,8 @@ function App() {
                     <Route path="/seller-dashboard" element={<SellerDashboard />}/>
                     <Route path="/example" element={<ExamplePage />} />
                     <Route path="*" element={<Navigate to="/" />} />
+                    <Route path="/joined-groups" element={<JoinedGroups />} />
+                    <Route path="/created-groups" element={<CreatedGroups />} />
                 </Routes>
             </BrowserRouter>
         </>

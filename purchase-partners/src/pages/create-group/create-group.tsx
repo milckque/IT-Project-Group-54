@@ -56,8 +56,16 @@ function CreateGroup() {
     return (
         <div className="dashboard-page flex flex-col size-full bg-gray-900">
             <Navbar />
-            <SearchNavBar buttonText="Create group" />
-            
+            <SearchNavBar buttonText="Create Group" />
+
+            <div className="bg-white px-6 pb-4">
+                <div className="flex items-center gap-2 text-gray-600 mb-6">
+                    <a href="/dashboard" className="hover:text-gray-900">Home</a>
+                    <span>/</span>
+                    <span>Create Group</span>
+                </div>
+            </div>
+
             <div className="h-full bg-white flex flex-col items-center py-12">
                 <form action={handleSubmit} className="w-full max-w-3xl px-8">
                     {/* Product Name Input */}
