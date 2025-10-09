@@ -1,9 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar/navbar";
+import SearchNavBar from "../../components/search-nav-bar/search-nav-bar";
 import supabase from "../../supabaseClient";
 import z, { type ZodSafeParseResult } from "zod";
 
-// A lot of the form handling code is adapted from this video:
-// https://www.youtube.com/watch?v=_QpTQrxzY8A
 const userSchema = z.object({
     productName: z.string().min(1, "Product name is required").max(127, "Product name is too long"),
     category: z.string().min(1, "Category is required"),
@@ -13,10 +13,9 @@ const userSchema = z.object({
     description: z.string().optional(),
 });
 
-
 function CreateGroup() {
+    const navigate = useNavigate();
 
-    // This is very hacked together definitely needs to be improved
     async function insertGroup(formValues: ZodSafeParseResult<any>) {
         const productData = {
             name: formValues.data.productName,
@@ -48,95 +47,107 @@ function CreateGroup() {
         const formValues = Object.fromEntries(formData);
         const result = userSchema.safeParse(formValues)
 
-        // console.log("Form Data:", formData);
-        // console.log("Form Values:", formValues);
-        // console.log("Validation Result:", result);
         if (result.success) {
-            // Handle successful form submission
             console.log("Form is valid:", result.data);
-            // Can use stuff like result.data.productName
             insertGroup(result);
         }
     };
 
     return (
-        <div className="dashboard-page flex flex-col size-full">
+        <div className="dashboard-page flex flex-col size-full bg-gray-900">
             <Navbar />
-            <div className="h-full bg-white flex flex-col">
-                <form action={handleSubmit} className="m-24 space-y-6 space-x-16 flex flex-col items-center">
+            <SearchNavBar buttonText="Create group" />
+            
+            <div className="h-full bg-white flex flex-col items-center py-12">
+                <form action={handleSubmit} className="w-full max-w-3xl px-8">
+                    {/* Product Name Input */}
                     <input
                         type="text"
-                        className="text-6xl italic bg-gray-200 w-4/5 p-3 mx-24 focus:outline-none"
+                        className="w-full text-5xl italic bg-transparent border-none focus:outline-none text-center mb-12 placeholder-gray-400"
                         maxLength={127}
-                        placeholder="Product Name..."
+                        placeholder="Product name..."
                         id="productName"
                         name="productName"
                         autoComplete="off"
                         required
                     />
 
-                    <div className="space-y-6 w-3/5">
+                    {/* Form Fields */}
+                    <div className="space-y-6 max-w-2xl mx-auto">
+                        {/* Category */}
                         <div className="flex items-center">
-                            <label className="w-32 text-right mr-4 font-medium text-gray-700">Category:</label>
+                            <label className="w-40 text-left text-lg font-normal">Category:</label>
                             <select 
-                                className="border rounded px-3 py-1 w-40" 
+                                className="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400" 
                                 id="category"
                                 name="category"
                                 defaultValue=""
                                 required
                             >
-                                <option value="" disabled>Select a category</option>
+                                <option value="" disabled>Choose</option>
                                 <option value="electronics">Electronics</option>
                                 <option value="transport">Transport</option>
                                 <option value="householdAppliances">Household Appliances</option>
                             </select>
                         </div>
+
+                        {/* Location */}
                         <div className="flex items-center">
-                            <label className="w-32 text-right mr-4 font-medium text-gray-700">Location:</label>
+                            <label className="w-40 text-left text-lg font-normal">Location:</label>
                             <input
                                 type="text"
-                                className="border rounded px-3 py-1 flex-1"
-                                placeholder="Select Location"
+                                className="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                                placeholder="..."
                                 id="location"
                                 name="location"
                                 required
                             />
                         </div>
+
+                        {/* Brand */}
                         <div className="flex items-center">
-                            <label className="w-32 text-right mr-4 font-medium text-gray-700">Brand:</label>
+                            <label className="w-40 text-left text-lg font-normal">Brand:</label>
                             <input
                                 type="text"
-                                className="border rounded px-3 py-1 flex-1"
-                                placeholder="Select Brand"
+                                className="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                                placeholder="..."
                                 id="brand"
                                 name="brand"
                             />
                         </div>
+
+                        {/* Expiry */}
                         <div className="flex items-center">
-                            <label className="w-32 text-right mr-4 font-medium text-gray-700">Expiry:</label>
-                            <select className="border rounded px-3 py-1 w-60">
-                                <option>Implementation needed</option>
+                            <label className="w-40 text-left text-lg font-normal">Expiry:</label>
+                            <select className="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                                <option>Implementation needed</option>id="expiry"
+                                name="expiry"
                             </select>
                         </div>
+
+                        {/* Description */}
                         <div className="flex items-start">
-                            <label className="w-32 text-right mr-4 font-medium text-gray-700 pt-2">Description:</label>
+                            <label className="w-40 text-left text-lg font-normal pt-2">Description:</label>
                             <textarea
-                                className="border rounded px-3 py-2 flex-1 min-h-[60px]"
-                                placeholder="Description"
+                                className="flex-1 border border-gray-300 rounded px-4 py-2 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
+                                placeholder="..."
                                 id="description"
                                 name="description"
                             />
                         </div>
-                        <div className="flex justify-center space-x-6 mt-8">
+
+                        {/* Buttons */}
+                        <div className="flex justify-center gap-8 mt-12">
                             <button
                                 type="submit"
-                                className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-6 rounded shadow"
+                                className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-10 rounded-lg shadow-md"
                             >
                                 Create group
                             </button>
                             <button
                                 type="button"
-                                className="border border-red-300 text-red-500 hover:bg-red-50 font-medium py-2 px-6 rounded"
+                                onClick={() => navigate('/dashboard')}
+                                className="border-2 border-red-300 text-red-500 hover:bg-red-50 font-semibold py-3 px-10 rounded-lg"
                             >
                                 Discard
                             </button>
@@ -149,3 +160,5 @@ function CreateGroup() {
 }
 
 export default CreateGroup;
+
+

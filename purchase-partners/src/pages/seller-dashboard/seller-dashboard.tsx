@@ -1,5 +1,5 @@
 import Navbar from '../../components/navbar/navbar';
-import SellerOffersBar from '../../components/seller-offers-bar/seller-offers-bar';
+import SellerOffersBar from '../../components/seller-bar/seller-bar';
 import SellerOfferCard from './seller-offer-card';
 import type { ProductOffer } from './seller-offer-card';
 
