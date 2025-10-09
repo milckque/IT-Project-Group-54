@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import supabase from "../../supabaseClient";
-import CreateAndSearch from "../../components/create-and-search.tsx/create-and-search";
 import BuyingGroupCard from "./buying-group-card";
+import CreateAndSearch from '../../components/create-and-search.tsx/create-and-search';
 
 type Product = {
     id: number;

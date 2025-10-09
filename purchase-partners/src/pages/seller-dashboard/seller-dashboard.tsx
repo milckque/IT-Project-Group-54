@@ -1,5 +1,5 @@
 import Navbar from '../../components/navbar/navbar';
-import CreateAndSearch from '../../components/create-and-search.tsx/create-and-search';
+import SellerOffersBar from '../../components/seller-offers-bar/seller-offers-bar';
 import SellerOfferCard from './seller-offer-card';
 import type { ProductOffer } from './seller-offer-card';
 
@@ -54,7 +54,7 @@ function SellerDashboard() {
       <Navbar />
 
       {/* Search, Filters, and Sidebar */}
-      <CreateAndSearch />
+      <SellerOffersBar />
 
       {/* Main Content */}
       <div className="bg-white min-h-screen">
