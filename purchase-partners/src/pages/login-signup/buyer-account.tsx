@@ -1,84 +1,110 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { CountrySelect } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
+import { useAuth } from "../../backend/AuthContext";
+import supabase from "../../supabaseClient";
 
 type AuthMode = "signup" | "login";
 
+// Profiles table expects: first_name, last_name, email, auth_id, country_name, phone_no, postcode
 const signupSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required" }),
   lastName: z.string().min(1, { message: "Last name is required" }),
-  email: z.email({ message: "Invalid email address" }),
-  phoneNumber: z.string().min(5),
-  country: z.string().min(1),
-  postcode: z.string().min(1),
-  username: z.string().min(3).max(50),
+  email: z.string().email({ message: "Invalid email address" }),
+  phoneNumber: z.string().min(5, { message: "Phone number is required" }),
+  country: z.string().min(1, { message: "Country is required" }),
+  postcode: z.string().min(1, { message: "Postcode is required" }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
 });
 
 const loginSchema = z.object({
-  email: z.email({ message: "Email address is required" }),
+  email: z.string().email({ message: "Email address is required" }),
   password: z.string().min(8, { message: "Incorrect password" }),
 });
 
 type SignupFields = z.infer<typeof signupSchema>;
 type LoginFields = z.infer<typeof loginSchema>;
 
-function BuyerAccount() {
-  const [active, setActive] = useState<AuthMode>("signup");
+export default function BuyerAccount() {
+  const [active, setActive] = useState<AuthMode>("login");
   const navigate = useNavigate();
+  const {
+    signInWithEmail,
+    signUpWithEmail,
+    loading: authLoading,
+    error: authError,
+    user,
+  } = useAuth();
 
-  // const {
-  //   register,
-  //   setValue,
-  //   handleSubmit,
-  //   setError,
-  //   formState: { errors, isSubmitting },
-  // } = useForm<SignupFields | LoginFields>({
-  //   resolver: zodResolver(active === "signup" ? signupSchema : loginSchema),
-  // });
+  // If already logged in, redirect away from login/signup page
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const signupForm = useForm<SignupFields>({
     resolver: zodResolver(signupSchema),
   });
-
   const loginForm = useForm<LoginFields>({
     resolver: zodResolver(loginSchema),
   });
 
-  // const onSubmit: SubmitHandler<SignupFields | LoginFields> = async (data) => {
-  //   try {
-  //     await new Promise((resolve) => setTimeout(resolve, 1000));
-  //     console.log(active, data);
-  //   } catch (error) {
-  //     setError("root", {
-  //       message: "This email is already taken",
-  //     });
-  //   }
-  // };
-
   const handleSignupSubmit: SubmitHandler<SignupFields> = async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("signup", data);
+      // Call auth context to sign up
+      await signUpWithEmail(data.email, data.password);
+
+      // Try to read the current session for the new user
+      const { data: sessionResp, error: sessionErr } =
+        await supabase.auth.getSession();
+      if (sessionErr) throw sessionErr;
+      const session = (sessionResp as any).session;
+      const authUser = session?.user ?? null;
+
+      if (!authUser) {
+        // If email confirmation is required, inform the user
+        signupForm.setError("root", {
+          message:
+            "Signup initiated. Please check your email to confirm. After confirming, sign in to complete profile creation.",
+        });
+        return;
+      }
+
+      // Insert profile
+      const { error: insertErr } = await supabase.from("Profiles").insert([
+        {
+          first_name: data.firstName,
+          last_name: data.lastName,
+          email: data.email,
+          auth_id: authUser.id,
+          country_name: data.country,
+          phone_no: data.phoneNumber,
+          postcode: data.postcode,
+        },
+      ]);
+      if (insertErr) throw insertErr;
+
       navigate("/dashboard");
-    } catch (error) {
-      signupForm.setError("root", { message: "This email is already taken" });
+    } catch (err: any) {
+      const message = (err && err.message) || authError || "Signup failed";
+      signupForm.setError("root", { message });
     }
   };
 
   const handleLoginSubmit: SubmitHandler<LoginFields> = async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("login", data);
+      await signInWithEmail(data.email, data.password);
       navigate("/dashboard");
-    } catch (error) {
-      loginForm.setError("root", { message: "This email is already taken" });
+    } catch (err: any) {
+      const message = (err && err.message) || authError || "Login failed";
+      loginForm.setError("root", { message });
     }
   };
 
@@ -119,16 +145,19 @@ function BuyerAccount() {
                 </button>
               </div>
 
-              {/* sign up form starts here */}
               <div className="mt-8 flex flex-col items-center">
                 {active === "signup" ? (
                   <form
                     className="flex flex-col items-center"
                     onSubmit={signupForm.handleSubmit(handleSignupSubmit)}
                   >
-                    {/* first & last name */}
+                    {signupForm.formState.errors.root && (
+                      <p className="text-red-600 mb-4">
+                        {signupForm.formState.errors.root.message as string}
+                      </p>
+                    )}
+
                     <div className="flex gap-10">
-                      {/* first name */}
                       <div className="flex-1">
                         <label className="block font-poppins text-sm font-medium mb-1">
                           First Name
@@ -136,7 +165,7 @@ function BuyerAccount() {
                         <input
                           {...signupForm.register("firstName")}
                           type="text"
-                          placeholder="Name"
+                          placeholder="First name"
                           className="border w-80 p-2 rounded-lg"
                         />
                         {signupForm.formState.errors.firstName && (
@@ -146,7 +175,6 @@ function BuyerAccount() {
                         )}
                       </div>
 
-                      {/* last name */}
                       <div className="flex-1">
                         <label className="block font-poppins text-sm font-medium mb-1">
                           Last Name
@@ -154,7 +182,7 @@ function BuyerAccount() {
                         <input
                           {...signupForm.register("lastName")}
                           type="text"
-                          placeholder="Name"
+                          placeholder="Last name"
                           className="border w-80 p-2 rounded-lg"
                         />
                         {signupForm.formState.errors.lastName && (
@@ -165,7 +193,6 @@ function BuyerAccount() {
                       </div>
                     </div>
 
-                    {/* email */}
                     <div className="mt-4">
                       <label className="block font-poppins text-sm font-medium mb-1">
                         Email
@@ -183,7 +210,6 @@ function BuyerAccount() {
                       )}
                     </div>
 
-                    {/* phone number */}
                     <div className="mt-4">
                       <label className="block font-poppins text-sm font-medium mb-1">
                         Phone number
@@ -194,11 +220,14 @@ function BuyerAccount() {
                         placeholder="Phone number"
                         className="border w-170 p-2 rounded-lg"
                       />
+                      {signupForm.formState.errors.phoneNumber && (
+                        <p className="text-red-500 text-sm">
+                          {signupForm.formState.errors.phoneNumber.message}
+                        </p>
+                      )}
                     </div>
 
-                    {/* country & postcode */}
                     <div className="flex mt-4 gap-10">
-                      {/* country */}
                       <div className="flex-1">
                         <label className="block font-poppins text-sm font-medium mb-1">
                           Country
@@ -207,20 +236,22 @@ function BuyerAccount() {
                           <CountrySelect
                             containerClassName="form-group"
                             inputClassName=""
-                            onChange={(country: any) => {
+                            onChange={(country: any) =>
                               signupForm.setValue("country", country.name, {
                                 shouldValidate: true,
                                 shouldDirty: true,
-                              });
-                              // setCountryid(country.id);
-                              // console.log("Selected country:", country);
-                            }}
+                              })
+                            }
                             placeHolder="Select Country"
                           />
                         </div>
+                        {signupForm.formState.errors.country && (
+                          <p className="text-red-500 text-sm">
+                            {signupForm.formState.errors.country.message}
+                          </p>
+                        )}
                       </div>
 
-                      {/* postcode */}
                       <div className="flex-1">
                         <label className="block font-poppins text-sm font-medium mb-1">
                           Postcode
@@ -231,23 +262,14 @@ function BuyerAccount() {
                           placeholder="Postcode"
                           className="border w-80 p-2 rounded-lg"
                         />
+                        {signupForm.formState.errors.postcode && (
+                          <p className="text-red-500 text-sm">
+                            {signupForm.formState.errors.postcode.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
-                    {/* username */}
-                    <div className="mt-4">
-                      <label className="block font-poppins text-sm font-medium mb-1">
-                        User name
-                      </label>
-                      <input
-                        {...signupForm.register("username")}
-                        type="text"
-                        placeholder="User name"
-                        className="border w-170 p-2 rounded-lg"
-                      />
-                    </div>
-
-                    {/* password */}
                     <div className="mt-4">
                       <label className="block font-poppins text-sm font-medium mb-1">
                         Password
@@ -265,26 +287,31 @@ function BuyerAccount() {
                       )}
                     </div>
 
-                    {/* submit button */}
                     <div className="flex mt-10 items-center">
                       <button
                         type="submit"
-                        className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl hover:bg-[#ffc106] cursor-pointer text-1xl 
-                    text-white text-center font-inter font-medium flex items-center justify-center gap-2"
+                        disabled={
+                          signupForm.formState.isSubmitting || authLoading
+                        }
+                        className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl hover:bg-[#ffc106] cursor-pointer text-1xl text-white text-center font-inter font-medium flex items-center justify-center gap-2"
                       >
-                        {signupForm.formState.isSubmitting
+                        {signupForm.formState.isSubmitting || authLoading
                           ? "Loading..."
                           : "Sign up"}
                       </button>
                     </div>
                   </form>
                 ) : (
-                  // log in form
                   <form
                     className="flex flex-col items-center"
                     onSubmit={loginForm.handleSubmit(handleLoginSubmit)}
                   >
-                    {/* email */}
+                    {loginForm.formState.errors.root && (
+                      <p className="text-red-600 mb-4">
+                        {loginForm.formState.errors.root.message as string}
+                      </p>
+                    )}
+
                     <div className="mt-4">
                       <label className="block font-poppins text-sm font-medium mb-1">
                         Email
@@ -302,7 +329,6 @@ function BuyerAccount() {
                       )}
                     </div>
 
-                    {/* password */}
                     <div className="mt-4">
                       <label className="block font-poppins text-sm font-medium mb-1">
                         Password
@@ -320,14 +346,15 @@ function BuyerAccount() {
                       )}
                     </div>
 
-                    {/* submit button */}
                     <div className="flex mt-10 items-center">
                       <button
                         type="submit"
-                        className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl hover:bg-[#ffc106] cursor-pointer text-1xl 
-                    text-white text-center font-inter font-medium flex items-center justify-center gap-2"
+                        disabled={
+                          loginForm.formState.isSubmitting || authLoading
+                        }
+                        className="w-80 h-15 bg-black rounded-full shadow-lg hover:shadow-xl hover:bg-[#ffc106] cursor-pointer text-1xl text-white text-center font-inter font-medium flex items-center justify-center gap-2"
                       >
-                        {loginForm.formState.isSubmitting
+                        {loginForm.formState.isSubmitting || authLoading
                           ? "Loading..."
                           : "Log in"}
                       </button>
@@ -343,15 +370,7 @@ function BuyerAccount() {
       <div
         className="flex-[1] bg-cover bg-center"
         style={{ backgroundImage: "url('./bg.png')" }}
-      ></div>
+      />
     </div>
   );
 }
-
-// const formSchema = z.object({
-//   email: z.string().email(),
-//   username: z.string().min(3).max(50),
-//   password: z.string().min(8),
-// });
-
-export default BuyerAccount;

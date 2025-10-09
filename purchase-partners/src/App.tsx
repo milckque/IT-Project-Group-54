@@ -1,8 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ExamplePage from './pages/dev-examples/ExamplePage';
-import Hello from "./pages/dev-examples/Hello";
-import Home from "./pages/dev-examples/Home";
-import BackendTest from "./BackendTest";
 import SellerAccount from "./pages/login-signup/seller-account";
 import BuyerAccount from "./pages/login-signup/buyer-account";
 import Landing from "./pages/landing/landing";
@@ -66,6 +63,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Landing />} />
+                    <Route path="/login" element={<BuyerAccount />} />
                     <Route path="/dashboard" element={<BuyingGroupDashboard />} />
                     <Route path="/create-group" element={<CreateGroup />} />
                     <Route path="/buyer-account" element={<BuyerAccount />} />

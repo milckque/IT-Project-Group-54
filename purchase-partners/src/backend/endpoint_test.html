@@ -1,0 +1,188 @@
+### API Tests for Buying Groups Controller
+### Install "REST Client" extension in VS Code to run these tests
+### Update the base URL and auth token as needed
+
+@baseUrl = http://localhost:5173/api
+@authToken = your-jwt-token-here
+@contentType = application/json
+
+### Test 1: Get all buying groups
+GET {{baseUrl}}/buyingGroups
+Authorization: Bearer {{authToken}}
+
+###
+
+### Test 2: Get specific buying group info
+GET {{baseUrl}}/buyingGroups/1
+Authorization: Bearer {{authToken}}
+
+###
+
+### Test 3: Create a new buying group
+POST {{baseUrl}}/buyingGroups/create
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "product_name": "iPhone 15 Pro",
+  "product_description": "Latest iPhone with titanium design",
+  "location": "Melbourne, VIC"
+}
+
+###
+
+### Test 4: Create another buying group (different product)
+POST {{baseUrl}}/buyingGroups/create
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "product_name": "tesla model 3",
+  "product_description": "Electric vehicle with autopilot",
+  "location": "Sydney, NSW"
+}
+
+###
+
+### Test 5: Create group with existing product (test duplicate handling)
+POST {{baseUrl}}/buyingGroups/create
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "product_name": "iPhone 15 Pro",
+  "product_description": "Same iPhone, different group",
+  "location": "Brisbane, QLD"
+}
+
+###
+
+### Test 6: Join a buying group (replace 1 with actual group_id from create response)
+POST {{baseUrl}}/buyingGroups/join/1
+Authorization: Bearer {{authToken}}
+
+###
+
+### Test 7: Try to join same group again (should handle duplicate)
+POST {{baseUrl}}/buyingGroups/join/1
+Authorization: Bearer {{authToken}}
+
+###
+
+### Test 8: Leave the buying group
+DELETE {{baseUrl}}/buyingGroups/leave/1
+Authorization: Bearer {{authToken}}
+
+###
+
+### Test 9: Try to leave group not joined (error handling)
+DELETE {{baseUrl}}/buyingGroups/leave/999
+Authorization: Bearer {{authToken}}
+
+###
+
+### ===== OFFER TESTS =====
+
+### Test 10: Create an offer for a group
+POST {{baseUrl}}/offers/create
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "group_id": 1,
+  "price": 1200.99,
+  "min_threshold": 5
+}
+
+###
+
+### Test 11: Get offer info (replace 1 with actual offer_id)
+GET {{baseUrl}}/offers/1
+Authorization: Bearer {{authToken}}
+
+###
+
+### Test 12: Join an offer
+POST {{baseUrl}}/offers/join/1
+Authorization: Bearer {{authToken}}
+
+###
+
+### Test 13: Get updated offer info (should show increased count)
+GET {{baseUrl}}/offers/1
+Authorization: Bearer {{authToken}}
+
+###
+
+### Test 14: Leave the offer
+DELETE {{baseUrl}}/offers/leave/1
+Authorization: Bearer {{authToken}}
+
+###
+
+### ===== ERROR HANDLING TESTS =====
+
+### Test 15: Create group with missing required fields
+POST {{baseUrl}}/buyingGroups/create
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "product_name": "",
+  "location": ""
+}
+
+###
+
+### Test 16: Access without authentication
+GET {{baseUrl}}/buyingGroups
+
+###
+
+### Test 17: Invalid group ID
+GET {{baseUrl}}/buyingGroups/invalid-id
+
+###
+
+### Test 18: Non-existent group ID
+GET {{baseUrl}}/buyingGroups/99999
+
+###
+
+### ===== EDGE CASE TESTS =====
+
+### Test 19: Very long product name (test validation)
+POST {{baseUrl}}/buyingGroups/create
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "product_name": "This is a very long product name that might exceed the maximum character limit of 127 characters and should be handled properly by the validation",
+  "location": "Adelaide, SA"
+}
+
+###
+
+### Test 20: Special characters in product name
+POST {{baseUrl}}/buyingGroups/create
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "product_name": "MacBook Pro 16\" M3 (2024) - Space Gray",
+  "product_description": "Professional laptop with M3 chip & 16GB RAM",
+  "location": "Perth, WA"
+}
+
+###
+
+### Test 21: Create offer with invalid data
+POST {{baseUrl}}/offers/create
+Authorization: Bearer {{authToken}}
+Content-Type: {{contentType}}
+
+{
+  "group_id": "invalid",
+  "price": -100,
+  "min_threshold": 0
+}
