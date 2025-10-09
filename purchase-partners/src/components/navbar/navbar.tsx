@@ -1,9 +1,7 @@
-
-
 function Navbar() {
 
     return (
-        <nav className="relative bg-gray-900">
+        <nav className="relative bg-black">
             <div className="mx-auto relative flex h-16 px-3 items-center justify-between">
                 <div className="flex flex-1 items-center justify-start h-full">
                     <div className="flex shrink-0 items-center m-1">
