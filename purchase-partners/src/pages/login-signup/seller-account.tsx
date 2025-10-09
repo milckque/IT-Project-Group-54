@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
@@ -30,6 +31,7 @@ type LoginFields = z.infer<typeof loginSchema>;
 
 function SellerAccount() {
   const [active, setActive] = useState<AuthMode>("signup");
+  const navigate = useNavigate();
 
   const signupForm = useForm<SignupFields>({
     resolver: zodResolver(signupSchema),
@@ -43,6 +45,7 @@ function SellerAccount() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       console.log("signup", data);
+      navigate("/seller-dashboard");
     } catch (error) {
       signupForm.setError("root", { message: "This email is already taken" });
     }
@@ -52,6 +55,7 @@ function SellerAccount() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       console.log("login", data);
+      navigate("/seller-dashboard");
     } catch (error) {
       loginForm.setError("root", { message: "This email is already taken" });
     }
