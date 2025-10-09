@@ -22,9 +22,10 @@ const SideBar = forwardRef<HTMLDivElement, { isOpen?: boolean }>(
                 <div className="header">
                     Insert stuff here
                 </div>
+                
                 <div className="body flex flex-col space-y-2">
                     <SideBarItem title="Account" href="/dashboard" />
-                    <SideBarItem title="Groups" href="/groups" />
+                    <SideBarItem title="Groups" href="/joined-groups" />
                     <SideBarItem title="Lists" href="/lists" />
                     <SideBarItem title="Vouchers" href="/vouchers" />
                 </div>
