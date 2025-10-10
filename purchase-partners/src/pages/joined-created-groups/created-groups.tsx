@@ -23,10 +23,6 @@ function CreatedGroups() {
         // Add leave logic here
     };
 
-    const handleDelete = (id: number) => {
-        console.log('Delete group:', id);
-        // Add delete logic here
-    };
 
     return (
         <div className="min-h-screen bg-white">
@@ -68,7 +64,6 @@ function CreatedGroups() {
                         group={group}
                         mode="created"
                         onLeave={handleLeave}
-                        onDelete={handleDelete}
                         />
                     ))}
                 </div>
