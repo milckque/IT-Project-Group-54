@@ -5,11 +5,11 @@ import type { BuyingGroup } from "./buying-group-dashboard";
 type CardMode = 'browse' | 'joined' | 'created';
 
 type BuyingGroupCardProps = {
-  group: BuyingGroup;
-  mode?: CardMode;
-  onLeave?: (id: number) => void;
-  onDelete?: (id: number) => void;
-  onJoin?: (id: number) => void;
+    group: BuyingGroup;
+    mode?: CardMode;
+    onLeave?: (id: number) => void;
+    onDelete?: (id: number) => void;
+    onJoin?: (id: number) => void;
 };
 
 function BuyingGroupCard({ group, mode = 'browse', onLeave, onDelete, onJoin }: BuyingGroupCardProps) {
