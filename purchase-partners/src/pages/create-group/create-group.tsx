@@ -68,20 +68,20 @@ function CreateGroup() {
 
             <div className="h-full bg-white flex flex-col items-center py-12">
                 <form action={handleSubmit} className="w-full max-w-3xl px-8">
-                    {/* Product Name Input */}
-                    <input
-                        type="text"
-                        className="w-full text-5xl italic bg-transparent border-none focus:outline-none text-center mb-12 placeholder-gray-400"
-                        maxLength={127}
-                        placeholder="Product name..."
-                        id="productName"
-                        name="productName"
-                        autoComplete="off"
-                        required
-                    />
-
                     {/* Form Fields */}
                     <div className="space-y-6 max-w-2xl mx-auto">
+                        {/* Product Name */}
+                        <div className="flex items-center">
+                            <label className="w-40 text-left text-lg font-normal">Product Name:</label>
+                            <input
+                                type="text"
+                                className="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                                placeholder="..."
+                                id="productName"
+                                name="productName"
+                                required
+                            />
+                        </div>
                         {/* Category */}
                         <div className="flex items-center">
                             <label className="w-40 text-left text-lg font-normal">Category:</label>
@@ -97,19 +97,6 @@ function CreateGroup() {
                                 <option value="transport">Transport</option>
                                 <option value="householdAppliances">Household Appliances</option>
                             </select>
-                        </div>
-
-                        {/* Location */}
-                        <div className="flex items-center">
-                            <label className="w-40 text-left text-lg font-normal">Location:</label>
-                            <input
-                                type="text"
-                                className="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
-                                placeholder="..."
-                                id="location"
-                                name="location"
-                                required
-                            />
                         </div>
 
                         {/* Brand */}

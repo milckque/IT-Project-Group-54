@@ -5,14 +5,13 @@ import type { BuyingGroup } from "./buying-group-dashboard";
 type CardMode = 'browse' | 'joined' | 'created';
 
 type BuyingGroupCardProps = {
-  group: BuyingGroup;
-  mode?: CardMode;
-  onLeave?: (id: number) => void;
-  onDelete?: (id: number) => void;
-  onJoin?: (id: number) => void;
+    group: BuyingGroup;
+    mode?: CardMode;
+    onLeave?: (id: number) => void; 
+    onJoin?: (id: number) => void;
 };
 
-function BuyingGroupCard({ group, mode = 'browse', onLeave, onDelete, onJoin }: BuyingGroupCardProps) {
+function BuyingGroupCard({ group, mode = 'browse', onLeave, onJoin }: BuyingGroupCardProps) {
     const [isBookmarked, setIsBookmarked] = useState(false);
 
     return (
@@ -73,12 +72,6 @@ function BuyingGroupCard({ group, mode = 'browse', onLeave, onDelete, onJoin }: 
                             className="px-6 py-2 border-2 border-gray-400 text-gray-700 rounded hover:bg-gray-300 font-medium"
                         >
                             Leave
-                        </button>
-                        <button 
-                            onClick={() => onDelete?.(group.id)}
-                            className="px-6 py-2 border-2 border-red-400 text-red-600 rounded hover:bg-red-50 font-medium"
-                        >
-                            Delete
                         </button>
                     </>
                 )}

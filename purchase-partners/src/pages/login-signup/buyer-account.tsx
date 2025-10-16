@@ -101,7 +101,13 @@ export default function BuyerAccount() {
   const handleLoginSubmit: SubmitHandler<LoginFields> = async (data) => {
     try {
       await signInWithEmail(data.email, data.password);
-      navigate("/dashboard");
+      if (user) {
+        navigate("/dashboard");
+      } else {
+        loginForm.setError("root", {
+          message: authError || "Login failed. Please try again.",
+        });
+      }
     } catch (err: any) {
       const message = (err && err.message) || authError || "Login failed";
       loginForm.setError("root", { message });
