@@ -2,55 +2,63 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import supabase from "../../supabaseClient";
 import BuyingGroupCard from "./buying-group-card";
-import CreateAndSearch from '../../components/buyer-bar/buyer-bar';
+import CreateAndSearch from "../../components/buyer-bar/buyer-bar";
+import { useNavigate } from "react-router-dom";
 
 type Product = {
-    id: number;
-    name: string;
-    description: string;
+  id: number;
+  name: string;
+  description: string;
 };
 
 type BuyingGroup = {
-    id: number;
-    created_at: string;
-    active: boolean;
-    location: string;
-    Products: Product;
+  id: number;
+  created_at: string;
+  active: boolean;
+  location: string;
+  Products: Product;
 };
 
 function BuyingGroupDashboard() {
-    const [groups, setGroups] = useState<BuyingGroup[]>([]);
+  const [groups, setGroups] = useState<BuyingGroup[]>([]);
+  const navigate = useNavigate();
 
-    async function fetchGroups() {
-        const { data, error } = await supabase
-            .from('BuyingGroups')
-            .select(`
+  async function fetchGroups() {
+    const { data, error } = await supabase.from("BuyingGroups").select(`
                 *,
                 Products (*)
             `);
-        if (error) {
-            console.error("Error fetching groups:", error);
-        } 
-        setGroups(data ?? []);
-        console.log("Fetched groups:", data);
+    if (error) {
+      console.error("Error fetching groups:", error);
     }
+    setGroups(data ?? []);
+    console.log("Fetched groups:", data);
+  }
 
-    useEffect(() => {
-        fetchGroups();
-    }, []);
+  const handleJoin = async (groupId: number) => {
+    navigate(`/group/${groupId}`);
+  };
 
+  useEffect(() => {
+    fetchGroups();
+  }, []);
 
-    return (
-        <div className="dashboard-page flex flex-col size-full">
-            <Navbar /> 
-            <CreateAndSearch />
-            <div className="grid grid-cols-2 gap-8 p-8">
-                {groups.map((item) => (
-                    <BuyingGroupCard key={item.id} group={item} />
-                ))}
-            </div>
-        </div>
-    );
+  return (
+    <div className="dashboard-page flex flex-col size-full">
+      <Navbar />
+      <CreateAndSearch />
+      <div className="grid grid-cols-2 gap-8 p-8">
+        {groups.map((item) => (
+          <BuyingGroupCard
+            key={item.id}
+            group={item}
+            mode="browse"
+            onJoin={handleJoin}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default BuyingGroupDashboard;

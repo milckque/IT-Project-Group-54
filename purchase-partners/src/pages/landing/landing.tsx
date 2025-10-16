@@ -2,23 +2,26 @@ function Landing() {
   return (
     <div className="landing-page flex size-full border-black">
       <div className="relative w-1/2 h-screen overflow-hidden">
-        <img src="./bg.png" alt="background" className="absolute left-0 top-0 h-screen w-auto object-cover object-left max-w-none"/>
-        
-        
+        <img
+          src="./bg.png"
+          alt="background"
+          className="absolute left-0 top-0 h-screen w-auto object-cover object-left max-w-none"
+        />
+
         <div className="absolute top-1/2 left-14 -translate-y-1/2 z-10">
           <div className="bg-white/95 max-w-xl w-[85%] md:w-3/5 lg:w-3/3 p-6 md:p-8 rounded-2xl shadow-xl text-left">
             <h2 className="font-inter text-2xl md:text-3xl font-bold mb-2 text-yellow-500">
               Purchase Partners
             </h2>
             <p className="font-inter text-sm md:text-base leading-relaxed text-gray-700">
-              A next-generation group-buying platform that flips the
-              market. Buyers unite around the products they actually want, attracting
-              targeted, conditional offers from sellers and manufacturers. With transparent
-              offers, secure deposits, and digital vouchers, we help buyers unlock better
-              deals while sellers reach committed customers at lower marketing cost.
+              A next-generation group-buying platform that flips the market.
+              Buyers unite around the products they actually want, attracting
+              targeted, conditional offers from sellers and manufacturers. With
+              transparent offers, secure deposits, and digital vouchers, we help
+              buyers unlock better deals while sellers reach committed customers
+              at lower marketing cost.
             </p>
           </div>
-        
         </div>
       </div>
 
@@ -32,7 +35,7 @@ function Landing() {
           className="m-2 w-100 h-15 px-6 py-3 bg-black rounded-full shadow-lg hover:shadow-xl cursor-pointer text-2xl 
                     text-white text-center font-inter font-bold flex items-center justify-center gap-2"
         >
-          <img src="./Bag_fill.svg" alt="Bag" />
+          <img src="./Bag_fill.svg" alt="Bag" className="w-32 h-auto/>
           BUY
         </a>
 
