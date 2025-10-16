@@ -4,7 +4,7 @@ import FilterBar from '../filter-bar/filter-bar';
 function CreateGroupBuyer() {
   return (
     <>
-      <SearchNavBar buttonText="Create Group" buttonLink="/create-group" />
+      <SearchNavBar buttonText="Create Group" buttonLink="/create-group" data={[]} />
       <FilterBar />
     </>
   );
