@@ -35,7 +35,7 @@ function Landing() {
           className="m-2 w-100 h-15 px-6 py-3 bg-black rounded-full shadow-lg hover:shadow-xl cursor-pointer text-2xl 
                     text-white text-center font-inter font-bold flex items-center justify-center gap-2"
         >
-          <img src="./Bag_fill.svg" alt="Bag" className="w-32 h-auto/>
+          <img src="./Bag_fill.svg" alt="Bag" />
           BUY
         </a>
 

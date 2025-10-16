@@ -16,7 +16,9 @@ export interface BuyingGroup {
   id: number;
   product_id: number;
   location: string;
-  created_at?: string;
+  created_at: string;
+  active: boolean;
+  Products?: Product;
 }
 
 export interface BuyingGroupMember {
@@ -56,10 +58,10 @@ export interface CreateOfferRequest {
 }
 
 // API response types
-export interface BuyingGroupWithDetails extends BuyingGroup {
-  Products: { name: string };
-  BuyingGroupMembers: { count: number };
-}
+// export interface BuyingGroupWithDetails extends BuyingGroup {
+//   Products: { name: string };
+//   BuyingGroupMembers: { count: number };
+// }
 
 export interface OfferInfoResponse {
   NumJoinedOffer: number;
@@ -67,7 +69,7 @@ export interface OfferInfoResponse {
 
 // API Endpoint types
 export type GetBuyingGroupsResponse = ApiResponse<BuyingGroup[]>;
-export type GetBuyingGroupInfoResponse = ApiResponse<BuyingGroupWithDetails>;
+// export type GetBuyingGroupInfoResponse = ApiResponse<BuyingGroupWithDetails>;
 export type CreateBuyingGroupResponse = ApiResponse<BuyingGroup>;
 export type JoinBuyingGroupResponse = ApiResponse<null>;
 export type LeaveBuyingGroupResponse = ApiResponse<null>;

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import supabase from "../../supabaseClient";
 import Navbar from "../../components/navbar/navbar";
 import { useLocation, useParams } from "react-router-dom";
+import type { BuyingGroup } from "../../types/api";
 import SearchNavBar from "../../components/search-nav-bar/search-nav-bar";
-import type { BuyingGroup } from "./buying-group-dashboard";
 
 // type BuyingGroupPage = {
 //   group: BuyingGroup;
@@ -13,6 +13,8 @@ function BuyingGroupPage() {
   const location = useLocation();
   const { id } = useParams<{ id: string }>();
   const [group, setGroup] = useState<any>(location.state?.group || null);
+  const [groups, setGroups] = useState<BuyingGroup[]>([]);
+  const [filteredGroups, setFilteredGroups] = useState<BuyingGroup[]>([]);
 
   useEffect(() => {
     async function fetchGroups() {
@@ -37,10 +39,20 @@ function BuyingGroupPage() {
     }
   }, [id, group]);
 
+  const handleSearchResults = (results: BuyingGroup[]) => {
+    setFilteredGroups(results.length > 0 ? results : groups);
+  };
   return (
     <div className="dashboard-page flex flex-col size-full">
       <Navbar />
-      <SearchNavBar buttonText="Create Group" buttonLink="/create-group" />
+      {/* put the search bar in so it looks good, doesn't do any yet */}
+      <SearchNavBar
+        buttonText="Create Group"
+        buttonLink="/create-group"
+        data={groups}
+        onSearchResults={handleSearchResults}
+      />
+
       <div className="bg-white px-6 pb-4">
         <div className="flex items-center gap-2 text-gray-600 mb-6">
           <a href="/dashboard" className="hover:text-gray-900">
