@@ -1,10 +1,10 @@
 import express from "express";
 import {
-    getOfferInfo,
-    createOffer,
-    joinOffer,
-    leaveOffer
-} from "../controllers/offerController.ts"
+  getOfferInfo,
+  createOffer,
+  joinOffer,
+  leaveOffer,
+} from "../controllers/offerController.ts";
 
 const router = express.Router();
 
