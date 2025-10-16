@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import supabase from "../../supabaseClient";
 import BuyingGroupCard from "./buying-group-card";
@@ -16,6 +16,7 @@ type BuyingGroupDetails = {
 
 function BuyingGroupDashboard() {
     const { profile, error } = useProfile();
+    const [profileLoaded, setProfileLoaded] = useState(false);
     const [groups, setGroups] = useState<BuyingGroupDetails[]>([]);
 
     async function fetchGroups() {
@@ -28,7 +29,6 @@ function BuyingGroupDashboard() {
         if (error) {
             console.error("Error fetching groups:", error);
         }
-        console.log("got groups");
 
         const groupsWithMode = await Promise.all(data?.map(async (group) => ({
             group: coerceGroupType(group),
@@ -41,50 +41,51 @@ function BuyingGroupDashboard() {
     }
 
     async function isMember(groupId: number): Promise<boolean> {
-        return false;
-        // if (!profile) {
-        //     return false;
-        // }
-        // const { data, error } = await supabase
-        //     .from('BuyingGroupMembers')
-        //     .select('*')
-        //     .eq('group_id', groupId)
-        //     .eq('buyer_id', profile.id);
-        // if (error) {
-        //     if (error.code === 'PGRST116') { // No rows found
-        //         return false;
-        //     }
-        //     console.error("Error checking membership:", error);
-        //     return false;
-        // }
+        // return false;
+        if (!profile) {
+            return false;
+        }
+        const { data, error } = await supabase
+            .from('BuyingGroupMembers')
+            .select('*')
+            .eq('group_id', groupId)
+            .eq('buyer_id', profile.id);
+        if (error) {
+            if (error.code === 'PGRST116') { // No rows found
+                return false;
+            }
+            console.error("Error checking membership:", error);
+            return false;
+        }
 
-        // return data && data.length > 0;
+        return data && data.length > 0;
     }
 
     async function getNumberOfMembers(groupId: number): Promise<number> {
-        return 0;
-        // const { count, error } = await supabase
-        //     .from('BuyingGroupMembers')
-        //     .select('*', { count: 'exact', head: true })
-        //     .eq('group_id', groupId);
-        // if (error) {
-        //     console.error("Error fetching number of members:", error);
-        //     return 0;
-        // }
-        // return count as number || 0;
-    }
-
-    async function test() {
-        console.log(await getNumberOfMembers(4));
+        // return 0;
+        const { count, error } = await supabase
+            .from('BuyingGroupMembers')
+            .select('*', { count: 'exact', head: true })
+            .eq('group_id', groupId);
+        if (error) {
+            console.error("Error fetching number of members:", error);
+            return 0;
+        }
+        return count as number || 0;
     }
 
     useEffect(() => {
-        console.log("Rendered");
-        if (profile) {
-            console.log("Got profile");
+        if (profile && !profileLoaded) {
+            setProfileLoaded(true);
             fetchGroups();
+            console.log("Profile loaded:", profile);
         }
-    }, [profile]);
+    }, [profile, profileLoaded]);
+
+    useEffect(() => {
+        console.log("test");
+        fetchGroups();
+    }, []);
 
     function onJoin(groupId: number) {
         // console.log("Joining group with ID:", groupId);
