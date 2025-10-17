@@ -10,6 +10,7 @@ import JoinedGroups from "./pages/joined-created-groups/joined-groups";
 import CreatedGroups from "./pages/joined-created-groups/created-groups";
 import SellerOffers from "./pages/seller-offers/seller-offers";
 import BuyingGroupPage from "./pages/buying-group-dashboard/buying-group-page";
+import BuyingGroupPageSeller from "./pages/buying-group-dashboard/buying-group-page-seller";
 
 function App() {
   // return (
@@ -77,6 +78,7 @@ function App() {
           <Route path="/created-groups" element={<CreatedGroups />} />
           <Route path="/group/:id" element={<BuyingGroupPage />} />
           <Route path="/seller-offers" element={<SellerOffers />} />
+          <Route path="/buying-group-seller" element={<BuyingGroupPageSeller />} />
         </Routes>
       </BrowserRouter>
     </>
