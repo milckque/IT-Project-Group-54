@@ -2,7 +2,7 @@ import { Bookmark } from 'lucide-react';
 import { useState } from 'react';
 import type { BuyingGroup } from '../../types/api';
 
-type CardMode = 'browse' | 'joined' | 'created';
+export type CardMode = 'browse' | 'joined' | 'created';
 
 
 type BuyingGroupCardProps = {
@@ -10,11 +10,15 @@ type BuyingGroupCardProps = {
     mode?: CardMode;
     onLeave?: (id: number) => void; 
     onJoin?: (id: number) => void;
+    numMembers?: number;
 };
 
-function BuyingGroupCard({ group, mode = 'browse', onLeave, onJoin }: BuyingGroupCardProps) {
+function BuyingGroupCard({ group, mode = 'browse', onLeave, onJoin, numMembers }: BuyingGroupCardProps) {
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const expiryDate = group.created_at ? new Date(new Date(group.created_at).setMonth(new Date(group.created_at).getMonth() + 2)) : null;
 
+    // console.log("Group in Card:", group);
+    
     return (
         <div key={group.id} className="group-card h-48 p-4 bg-gray-200 shadow-xl rounded-lg flex flex-row relative">
             {/* Bookmark Button */}
@@ -29,13 +33,13 @@ function BuyingGroupCard({ group, mode = 'browse', onLeave, onJoin }: BuyingGrou
 
             <div className="details flex-3 flex flex-col justify-between pr-4">
                 <div>
-                    <p className="text-sm text-gray-600 mb-1 italic">{group.Products?.name ? 'Mobile phones' : ''}</p>
-                    <h2 className="text-2xl font-bold mb-3">{group.Products?.name}</h2>
+                    <p className="text-sm text-gray-600 mb-1 italic">{group.product?.name ? 'Mobile phones' : ''}</p>
+                    <h2 className="text-2xl font-bold mb-3">{group.product?.name}</h2>
                     
                     <div className="flex items-center gap-4 text-sm">
                         <div className="flex items-center gap-1">
                             <span className="text-yellow-500">👥</span>
-                            <span>Joined: Buyers</span>
+                            <span>Joined: {numMembers}</span>
                         </div>
                         <div className="flex items-center gap-1">
                             <span className="text-green-600">💰</span>
@@ -44,7 +48,7 @@ function BuyingGroupCard({ group, mode = 'browse', onLeave, onJoin }: BuyingGrou
                     </div>
                 </div>
                 
-                <p className="text-xs text-gray-500">Expired: {new Date(group.created_at).toLocaleDateString()}</p>
+                <p className="text-xs text-gray-500">Expired: {expiryDate ? expiryDate.toLocaleDateString() : 'N/A'}</p>
             </div>
             
             <div className="functionality flex-1 flex flex-col justify-center items-end gap-2">
