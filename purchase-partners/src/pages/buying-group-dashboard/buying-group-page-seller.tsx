@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import supabase from "../../supabaseClient";
 import Navbar from "../../components/navbar/navbar";
 import { useLocation, useParams } from "react-router-dom";
@@ -14,6 +15,7 @@ function SellerBuyingGroupPage() {
     const [groups, setGroups] = useState<BuyingGroup[]>([]);
     const [filteredGroups, setFilteredGroups] = useState<BuyingGroup[]>([]);
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchGroups() {
@@ -103,7 +105,7 @@ function SellerBuyingGroupPage() {
                 {/* Brand */}
                 <p className="text-2xl font-poppins mt-6">Brand</p>
                 <p className="text-lg font-poppins ml-4">
-                {group?.Products.brand || "NA"}
+                    {group?.Products.brand || "NA"}
                 </p>
             </div>
 
@@ -111,17 +113,20 @@ function SellerBuyingGroupPage() {
             <div className="flex flex-col items-end gap-4 min-w-[280px]">
                 {/* Offer counter - top right */}
                 <div className="text-xl font-medium">
-                1/2
+                    1/2 
                 </div>
 
                 {/* Make an Offer Button */}
-                <button className="bg-[#E52D2D] w-full text-white rounded-lg hover:bg-red-600 font-medium text-xl font-inter px-8 py-3">
-                Make an Offer
+                <button 
+                    onClick={() => navigate('/make-offer')}
+                    className="bg-[#E52D2D] w-full text-white rounded-lg hover:bg-red-600 font-medium text-xl font-inter px-8 py-3"
+                >
+                    Make an Offer
                 </button>
 
                 {/* Pay Fee Button */}
                 <button className="bg-white border-2 border-gray-300 w-full text-gray-700 rounded-lg hover:bg-gray-100 font-medium text-xl font-inter px-8 py-3">
-                Pay Fee
+                    Pay Fee
                 </button>
 
                 {/* Set Notify Threshold Button */}
@@ -135,9 +140,9 @@ function SellerBuyingGroupPage() {
 
                 {/* Joined Buyers */}
                 <div className="mt-8">
-                <p className="text-xl font-medium font-poppins text-right">
-                    Joined: {group?.buyer_count || 608} Buyers
-                </p>
+                    <p className="text-xl font-medium font-poppins text-right">
+                        Joined: {group?.buyer_count || 608} Buyers
+                    </p>
                 <div className="flex flex-row gap-2 mt-3 justify-end">
                     <img src="/Group_fill_grey.svg" alt="members" className="w-10 h-10" />
                     <img src="/Group_fill_grey.svg" alt="members" className="w-10 h-10" />
