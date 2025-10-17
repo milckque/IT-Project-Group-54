@@ -34,6 +34,7 @@ const SideBar = forwardRef<HTMLDivElement, { isOpen?: boolean }>(
                 onClick={async (e) => {
                   e.preventDefault();
                   await signOut();
+                  window.location.reload();
                 }}
               />
             </div>
