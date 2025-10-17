@@ -15,8 +15,8 @@ export interface BuyingGroup {
   id: number;
   location: string;
   active: boolean;
-  created_at?: string;
-  product?: Product;
+  created_at: string;
+  product: Product;
 }
 
 export interface BuyingGroupRaw {

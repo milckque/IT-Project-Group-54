@@ -23,7 +23,6 @@ function CreateGroup() {
             description: formValues.data.description || "",
         }
 
-        console.log("Inserting product:", productData);
         const { data: product } = await supabase
             .from('Products')
             .insert([productData])
@@ -36,12 +35,12 @@ function CreateGroup() {
             product_id: product.id 
         }
 
-        console.log("Inserting group:", formValues.data);
         const { data: buyingGroup } = await supabase
             .from('BuyingGroups')
             .insert([buyingGroupData])
             .select()
             .single();
+        console.log("Created buying group");
     }
 
     const handleSubmit = (formData: FormData) => {
