@@ -2,12 +2,12 @@
 ### Install "REST Client" extension in VS Code to run these tests
 ### Update the base URL and auth token as needed
 
-@baseUrl = http://localhost:5173/api
-@authToken = your-jwt-token-here
+@baseUrl = https://bemnmyvemyosyocrnjgf.supabase.co/rest/v1
+@authToken = VITE_SUPABASE_PUBLISHABLE_KEY
 @contentType = application/json
 
 ### Test 1: Get all buying groups
-GET {{baseUrl}}/buyingGroups
+GET {{baseUrl}}/BuyingGroups
 Authorization: Bearer {{authToken}}
 
 ###

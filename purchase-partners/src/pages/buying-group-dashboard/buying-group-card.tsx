@@ -1,8 +1,9 @@
 import { Bookmark } from 'lucide-react';
 import { useState } from 'react';
-import type { BuyingGroup } from "./buying-group-dashboard";
+import type { BuyingGroup } from '../../types/api';
 
 type CardMode = 'browse' | 'joined' | 'created';
+
 
 type BuyingGroupCardProps = {
     group: BuyingGroup;
@@ -29,7 +30,7 @@ function BuyingGroupCard({ group, mode = 'browse', onLeave, onJoin }: BuyingGrou
             <div className="details flex-3 flex flex-col justify-between pr-4">
                 <div>
                     <p className="text-sm text-gray-600 mb-1 italic">{group.Products?.name ? 'Mobile phones' : ''}</p>
-                    <h2 className="text-2xl font-bold mb-3">{group.Products.name}</h2>
+                    <h2 className="text-2xl font-bold mb-3">{group.Products?.name}</h2>
                     
                     <div className="flex items-center gap-4 text-sm">
                         <div className="flex items-center gap-1">
