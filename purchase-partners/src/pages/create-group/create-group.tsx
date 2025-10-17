@@ -3,11 +3,11 @@ import Navbar from "../../components/navbar/navbar";
 import SearchNavBar from "../../components/search-nav-bar/search-nav-bar";
 import supabase from "../../supabaseClient";
 import z, { type ZodSafeParseResult } from "zod";
+import { useProfile } from "../../hooks/useProfile";
 
 const userSchema = z.object({
     productName: z.string().min(1, "Product name is required").max(127, "Product name is too long"),
     category: z.string().min(1, "Category is required"),
-    location: z.string().min(1, "Location is required"),
     brand: z.string().optional(),
     expiry: z.string().optional(),
     description: z.string().optional(),
@@ -15,6 +15,7 @@ const userSchema = z.object({
 
 function CreateGroup() {
     const navigate = useNavigate();
+    const { profile, error } = useProfile();
 
     async function insertGroup(formValues: ZodSafeParseResult<any>) {
         const productData = {
@@ -30,7 +31,7 @@ function CreateGroup() {
             .single();
 
         const buyingGroupData = {
-            location: formValues.data.location,
+            location: profile?.country_name.toString() + " " + profile?.postcode.toString() || "Unknown Location",
             active: true,
             product_id: product.id 
         }
