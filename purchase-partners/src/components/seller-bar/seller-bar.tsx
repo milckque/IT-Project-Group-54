@@ -5,7 +5,7 @@ function SellerOffersBar() {
   return (
     <>
     {/* still need to do offers page */}
-      <SearchNavBar buttonText="Offers" buttonLink="/create-group" />
+      <SearchNavBar buttonText="Offers" buttonLink="/seller-offers" />
       <FilterBar />
     </>
   );

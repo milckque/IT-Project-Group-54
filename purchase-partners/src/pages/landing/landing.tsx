@@ -8,7 +8,7 @@ function Landing() {
           className="absolute left-0 top-0 h-screen w-auto object-cover object-left max-w-none"
         />
 
-        <div className="absolute top-1/2 left-14 -translate-y-1/2 z-10">
+        <div className="absolute top-1/2 left-6 -translate-y-1/2 z-10">
           <div className="bg-white/95 max-w-xl w-[85%] md:w-3/5 lg:w-3/3 p-6 md:p-8 rounded-2xl shadow-xl text-left">
             <h2 className="font-inter text-2xl md:text-3xl font-bold mb-2 text-yellow-500">
               Purchase Partners
