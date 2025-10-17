@@ -13,7 +13,7 @@ import FilterBar from "../../components/filter-bar/filter-bar";
 
 
 
-type BuyingGroupDetails = {
+export type BuyingGroupDetails = {
     group: BuyingGroup;
     mode: CardMode;
     numMembers: number;
@@ -79,10 +79,6 @@ function BuyingGroupDashboard() {
         }
         return count as number || 0;
     }
-
-    const handleJoin = async (groupId: number) => {
-      
-    };
 
     useEffect(() => {
         if (profile && !profileLoaded) {
@@ -156,7 +152,7 @@ function BuyingGroupDashboard() {
             <SearchNavBar
               buttonText="Create Group"
               buttonLink="/create-group"
-              data={groups.map(item => item.group)}
+              data={groups}
               onSearchResults={handleSearchResults}
             />
             <FilterBar />

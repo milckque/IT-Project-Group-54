@@ -4,13 +4,14 @@ import SideBar from "../side-bar/side-bar";
 import { useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
 import type { BuyingGroup } from "../../types/api";
+import type { BuyingGroupDetails } from "../../pages/buying-group-dashboard/buying-group-dashboard";
 
 type SearchNavBarProps = {
   buttonText: string;
   buttonLink?: string;
   onButtonClick?: () => void;
   onSearchResults?: (results: any[]) => void;
-  data: BuyingGroup[];
+  data: BuyingGroupDetails[];
 };
 
 function SearchNavBar({
@@ -33,7 +34,7 @@ function SearchNavBar({
       return;
     }
     const fuse = new Fuse(data, {
-      keys: ["Products.name", "Products.description"],
+      keys: ["group.product.name"],
     });
 
     const result = fuse.search(searchQuery);
