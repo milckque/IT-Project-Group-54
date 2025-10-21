@@ -6,13 +6,22 @@ import type { Categories, CompleteBuyingGroupInfo } from "../../types/api";
 interface FilterBarProps {
   categories?: Categories[];
   groups?: CompleteBuyingGroupInfo[];
-  onFilterChange?: (filteredGroups: CompleteBuyingGroupInfo[], categoryId: number | null) => void;
+  onFilterChange?: (
+    filteredGroups: CompleteBuyingGroupInfo[],
+    categoryId: number | null
+  ) => void;
 }
 
-function FilterBar({ categories, groups = [], onFilterChange }: FilterBarProps) {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+function FilterBar({
+  categories,
+  groups = [],
+  onFilterChange,
+}: FilterBarProps) {
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null
+  );
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState("");
 
   // Get all descendant category IDs for a given category
   const getDescendantIds = (categoryId: number): number[] => {
@@ -32,83 +41,78 @@ function FilterBar({ categories, groups = [], onFilterChange }: FilterBarProps) 
   };
 
   const handleCategoryChange = (categoryId: number) => {
-    console.log('Category selected:', categoryId);
+    console.log("Category selected:", categoryId);
     setSelectedCategoryId(categoryId);
     setShowCategoryDropdown(false);
 
     // Filter groups based on selected category and all its descendants
     if (onFilterChange) {
       const descendantIds = getDescendantIds(categoryId);
-      const filtered = groups.filter(
-        (group) => descendantIds.includes(group.category_id)
+      const filtered = groups.filter((group) =>
+        descendantIds.includes(group.category_id)
       );
-      console.log('Descendant IDs:', descendantIds);
-      console.log('Filtered results:', filtered.length, 'groups');
+      console.log("Descendant IDs:", descendantIds);
+      console.log("Filtered results:", filtered.length, "groups");
       onFilterChange(filtered, categoryId);
     }
   };
 
-  const selectedCategoryName = 
+  const selectedCategoryName =
     selectedCategoryId === null
-      ? 'All Categories'
-      : categories?.find((c) => c.id === selectedCategoryId)?.category_name || 'Categories';
+      ? "All Categories"
+      : categories?.find((c) => c.id === selectedCategoryId)?.category_name ||
+        "Categories";
 
   return (
-    <div onClick={(e) => {
-      // Close dropdown when clicking outside
-      if (showCategoryDropdown) {
-        setShowCategoryDropdown(false);
-      }
-    }}>
-      <div>
-        <span>Home</span>
+    <div
+      onClick={() => {
+        // Close dropdown when clicking outside
+        if (showCategoryDropdown) {
+          setShowCategoryDropdown(false);
+        }
+      }}
+    >
+      <div className="px-6 pb-4">
+        <span className="text-gray-600">Home</span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <button style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <SlidersHorizontal style={{ width: '16px', height: '16px' }} />
+      {/* Filters */}
+      <div className="px-6 flex items-center gap-4">
+        <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+          <SlidersHorizontal className="w-4 h-4" />
           Filter & Sort
         </button>
 
-        <div style={{ position: 'relative' }}>
+        {/* Category Dropdown Filter */}
+        <div className="relative">
           <button
             onClick={(e) => {
               e.stopPropagation();
               setShowCategoryDropdown(!showCategoryDropdown);
             }}
-            style={{
-              padding: '8px 16px',
-              border: '1px solid #ccc',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              backgroundColor: showCategoryDropdown ? '#f0f0f0' : 'white',
-              transition: 'background-color 0.2s',
-            }}
+            className={`
+              px-4 py-2 border border-gray-300 rounded-lg cursor-pointer transition-colors duration-200
+              ${
+                showCategoryDropdown
+                  ? "bg-gray-100"
+                  : "bg-white hover:bg-gray-50"
+              }
+            `}
           >
-            {selectedCategoryName} {showCategoryDropdown ? '▼' : '▶'}
+            {selectedCategoryName} {showCategoryDropdown ? "▼" : "▶"}
           </button>
 
           {showCategoryDropdown && (
             <div
               onClick={(e) => e.stopPropagation()}
-              style={{
-                position: 'absolute',
-                top: '100%',
-                left: 0,
-                marginTop: '8px',
-                border: '1px solid #ccc',
-                borderRadius: '8px',
-                backgroundColor: 'white',
-                zIndex: 10,
-                minWidth: '250px',
-                maxHeight: '400px',
-                overflowY: 'auto',
-                padding: '8px',
-              }}
+              className="
+                absolute top-full left-0 mt-2 border border-gray-300 rounded-lg
+                bg-white z-10 min-w-[250px] max-h-[400px] overflow-y-auto p-2 shadow-lg
+              "
             >
               {categories && categories.length > 0 ? (
                 <>
-                    <div
+                  <div
                     onClick={() => {
                       setSelectedCategoryId(null);
                       setShowCategoryDropdown(false);
@@ -116,18 +120,14 @@ function FilterBar({ categories, groups = [], onFilterChange }: FilterBarProps) 
                         onFilterChange(groups, null);
                       }
                     }}
-                    style={{
-                      paddingTop: '4px',
-                      paddingBottom: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      backgroundColor: selectedCategoryId === null ? '#f0f0f0' : 'transparent',
-                      padding: '8px',
-                      borderRadius: '4px',
-                      transition: 'background-color 0.2s',
-                    }}
+                    className={`
+                      p-2 cursor-pointer flex items-center gap-2 rounded-md transition-colors duration-200
+                      ${
+                        selectedCategoryId === null
+                          ? "bg-gray-100 hover:bg-gray-200"
+                          : "hover:bg-gray-50"
+                      }
+                    `}
                   >
                     <input
                       type="radio"
@@ -139,9 +139,7 @@ function FilterBar({ categories, groups = [], onFilterChange }: FilterBarProps) 
                         }
                       }}
                       onClick={(e) => e.stopPropagation()}
-                      style={{
-                        cursor: 'pointer',
-                      }}
+                      className="cursor-pointer"
                     />
                     <span>All Categories</span>
                   </div>
@@ -152,25 +150,11 @@ function FilterBar({ categories, groups = [], onFilterChange }: FilterBarProps) 
                   />
                 </>
               ) : (
-                <div style={{ padding: '8px', color: '#666' }}>
-                  No categories available
-                </div>
+                <div className="p-2 text-gray-500">No categories available</div>
               )}
             </div>
           )}
         </div>
-
-        <input
-          type="text"
-          placeholder="Select Location"
-          value={selectedLocation}
-          onChange={(e) => setSelectedLocation(e.target.value)}
-          style={{
-            padding: '8px 16px',
-            border: '1px solid #ccc',
-            borderRadius: '8px',
-          }}
-        />
       </div>
     </div>
   );
