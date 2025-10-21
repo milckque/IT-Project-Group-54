@@ -99,13 +99,16 @@ function CreateGroup() {
                             </select>
                         </div>
 
-                        {/* Expiry */}
+                        {/* Brand */}
                         <div className="flex items-center">
-                            <label className="w-40 text-left text-lg font-normal">Expiry:</label>
-                            <select className="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
-                                <option>Implementation needed</option>id="expiry"
-                                name="expiry"
-                            </select>
+                            <label className="w-40 text-left text-lg font-normal">Brand:</label>
+                            <input
+                                type="text"
+                                className="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                                placeholder="..."
+                                id="brand"
+                                name="brand"
+                            />
                         </div>
 
                         {/* Description */}
