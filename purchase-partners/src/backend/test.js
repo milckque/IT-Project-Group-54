@@ -6,21 +6,31 @@ const supabaseKey =
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// const { data, error } = await supabase
+//   .from("BuyingGroups")
+//   .select("*, Products(*)");
+
+// if (error) {
+//   console.error("Error fetching data:", error);
+// } else {
+//   const flattened = data.map((row) => ({
+//     id: row.id,
+//     created_at: row.created_at,
+//     active: row.active,
+//     location: row.location,
+//     product_id: row.product_id,
+//     product_name: row.Products.name,
+//     product_description: row.Products.description,
+//   }));
+//   console.log(flattened);
+// }
+
 const { data, error } = await supabase
-  .from("BuyingGroups")
-  .select("*, Products(*)");
+  .from("Categories")
+  .select("*");
 
 if (error) {
   console.error("Error fetching data:", error);
 } else {
-  const flattened = data.map((row) => ({
-    id: row.id,
-    created_at: row.created_at,
-    active: row.active,
-    location: row.location,
-    product_id: row.product_id,
-    product_name: row.Products.name,
-    product_description: row.Products.description,
-  }));
-  console.log(flattened);
+  console.log(data);
 }
