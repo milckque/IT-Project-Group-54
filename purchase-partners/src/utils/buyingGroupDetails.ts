@@ -82,7 +82,7 @@ async function isMember(groupId: number, profile?: Profile): Promise<boolean> {
     return data && data.length > 0;
 }
 
-async function getNumberOfMembers(groupId: number): Promise<number> {
+export async function getNumberOfMembers(groupId: number): Promise<number> {
     // return 0;
     const { count, error } = await supabase
         .from("BuyingGroupMembers")
@@ -94,3 +94,30 @@ async function getNumberOfMembers(groupId: number): Promise<number> {
     }
     return (count as number) || 0;
 }
+
+// export async function getUserGroups(profile: Profile) {
+//     if (!profile) {
+//         return [];
+//     }
+
+//         const { data, error } = await supabase
+//         .from("BuyingGroupMembers")
+//         .select(
+//           `
+//             group_id,
+//             buyer_id
+//           `
+//         )
+//         .eq("buyer_id", profile.id);
+
+//     if (error) {
+//         console.error("Error fetching user groups:", error);
+//         return [];
+//     }
+
+// //     const groups: BuyingGroup[] = data.flatMap((record: any) =>
+// //     record.BuyingGroups ? [record.BuyingGroups] : []
+// //   );
+
+//   return data;
+// }

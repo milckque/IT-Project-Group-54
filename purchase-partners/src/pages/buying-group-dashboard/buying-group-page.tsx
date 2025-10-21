@@ -14,7 +14,7 @@ function BuyingGroupPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [group, setGroup] = useState<BuyingGroupDetails | null>(null);
-  
+
   useEffect(() => {
     if (id) {
       fetchGroupDetails(profile ?? undefined, Number(id)).then((data) => {
@@ -39,16 +39,19 @@ function BuyingGroupPage() {
       console.error("User profile not loaded.");
       return;
     }
-    supabase.from('BuyingGroupMembers').upsert({
-      group_id: group?.group.id,
-      buyer_id: profile.id,
-    }).then(({ data, error }) => {
-      if (error) {
-        console.error("Error joining group:", error);
-      } else {
-        console.log("Successfully joined group:", data);
-      }
-    });
+    supabase
+      .from("BuyingGroupMembers")
+      .upsert({
+        group_id: group?.group.id,
+        buyer_id: profile.id,
+      })
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("Error joining group:", error);
+        } else {
+          console.log("Successfully joined group:", group?.group.id);
+        }
+      });
 
     navigate(`/dashboard`);
   }
@@ -67,13 +70,12 @@ function BuyingGroupPage() {
         if (error) {
           console.error("Error leaving group:", error);
         } else {
-          console.log("Successfully left group:", data);
+          console.log("Successfully left group:", group?.group.id);
         }
       });
 
     navigate(`/dashboard`);
   }
-
 
   return (
     <div className="dashboard-page flex flex-col size-full">
@@ -83,7 +85,7 @@ function BuyingGroupPage() {
         buttonText="Create Group"
         buttonLink="/create-group"
         data={[]}
-        onSearchResults={() => { }}
+        onSearchResults={() => {}}
       />
 
       <div className="bg-white px-6 pb-4">
@@ -112,19 +114,23 @@ function BuyingGroupPage() {
             {/* Brand */}
             {/* Can't find brand in the database */}
             <p className="text-2xl font-poppins ml-8 mt-3">Brand</p>
-            <p className="text-1xl font-poppins ml-8">
-              {"NA"}
-            </p>
+            <p className="text-1xl font-poppins ml-8">{"NA"}</p>
           </div>
 
           {/* Join & Leave Buttons */}
           <div className="flex flex-col px-30">
             {group?.mode === "joined" ? (
-              <button onClick={handleLeave} className="bg-white border-1 border-black h-15 w-70 text-black rounded-lg hover:bg-gray-200 font-medium text-2xl font-inter px-10 py-3 mt-5">
+              <button
+                onClick={handleLeave}
+                className="bg-white border-1 border-black h-15 w-70 text-black rounded-lg hover:bg-gray-200 font-medium text-2xl font-inter px-10 py-3 mt-5"
+              >
                 Leave
               </button>
             ) : (
-              <button onClick={handleJoin} className="bg-[#E52D2D] h-15 w-70 text-white rounded-lg hover:bg-red-700 font-medium text-2xl font-inter px-10 py-3 mt-5">
+              <button
+                onClick={handleJoin}
+                className="bg-[#E52D2D] h-15 w-70 text-white rounded-lg hover:bg-red-700 font-medium text-2xl font-inter px-10 py-3 mt-5"
+              >
                 Join
               </button>
             )}
