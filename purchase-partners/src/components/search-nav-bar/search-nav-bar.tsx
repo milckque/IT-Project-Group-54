@@ -3,15 +3,14 @@ import { Search } from "lucide-react";
 import SideBar from "../side-bar/side-bar";
 import { useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
-import type { BuyingGroup } from "../../types/api";
-import type { BuyingGroupDetails } from "../../pages/buying-group-dashboard/buying-group-dashboard";
+import type { BuyingGroup, CompleteBuyingGroupInfo } from "../../types/api";
 
 type SearchNavBarProps = {
   buttonText: string;
   buttonLink?: string;
   onButtonClick?: () => void;
   onSearchResults?: (results: any[]) => void;
-  data: BuyingGroupDetails[];
+  data: CompleteBuyingGroupInfo[];
 };
 
 function SearchNavBar({
@@ -22,7 +21,7 @@ function SearchNavBar({
   data,
 }: SearchNavBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<CompleteBuyingGroupInfo[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -34,12 +33,13 @@ function SearchNavBar({
       return;
     }
     const fuse = new Fuse(data, {
-      keys: ["group.product.name"],
+      keys: ["product_name"],
     });
-
     const result = fuse.search(searchQuery);
-    onSearchResults?.(result.map((r) => r.item));
-  }, [searchQuery, onSearchResults]);
+    const items = result.map((r) => r.item);
+    setSearchResults(items);
+    onSearchResults?.(items);
+  }, [searchQuery, data]);
 
   // Close sidebar when clicking outside
   useEffect(() => {
