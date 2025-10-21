@@ -111,15 +111,6 @@ function CreateGroup() {
                             />
                         </div>
 
-                        {/* Expiry */}
-                        <div className="flex items-center">
-                            <label className="w-40 text-left text-lg font-normal">Expiry:</label>
-                            <select className="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400">
-                                <option>Implementation needed</option>id="expiry"
-                                name="expiry"
-                            </select>
-                        </div>
-
                         {/* Description */}
                         <div className="flex items-start">
                             <label className="w-40 text-left text-lg font-normal pt-2">Description:</label>
