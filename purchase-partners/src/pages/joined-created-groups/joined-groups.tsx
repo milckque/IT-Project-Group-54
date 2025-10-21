@@ -117,7 +117,7 @@ function JoinedGroups() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex justify-center gap-4 mb-8">
+        {/* <div className="flex justify-center gap-4 mb-8">
           <button className="px-8 py-3 font-bold text-lg bg-black text-yellow-400 rounded-lg">
             Joined
           </button>
@@ -128,10 +128,12 @@ function JoinedGroups() {
           >
             Created
           </a>
-        </div>
+        </div> */}
 
         {/* Groups Header */}
-        <h2 className="text-xl font-bold mb-6">Groups</h2>
+        <h1 className="flex justify-center text-4xl font-bold mb-10">
+          Joined Groups
+        </h1>
 
         {/* Groups List */}
         <div className="grid grid-cols-2 gap-8">
