@@ -76,7 +76,7 @@ function CreateGroup() {
                             <input
                                 type="text"
                                 className="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
-                                placeholder="..."
+                                placeholder="Brand, Product Name, Specification (e.g. Apple, iPhone 17, 256GB)"
                                 id="productName"
                                 name="productName"
                                 required
@@ -116,7 +116,7 @@ function CreateGroup() {
                             <label className="w-40 text-left text-lg font-normal pt-2">Description:</label>
                             <textarea
                                 className="flex-1 border border-gray-300 rounded px-4 py-2 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
-                                placeholder="..."
+                                placeholder="e.g. Looking for a brand new iPhone 17, sealed in box. Must be unopened and in original packaging. Prefer base model, 256gb storage or higher, any colour."
                                 id="description"
                                 name="description"
                             />
