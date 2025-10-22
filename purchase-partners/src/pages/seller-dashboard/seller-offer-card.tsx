@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Bookmark, Bell } from "lucide-react";
 import type { BuyingGroup } from "../../types/api";
 
-export type CardMode = "browse" | "joined" | "created";
+export type CardMode = "make-offer";
 
 // type ProductOffer = {
 //   id: number;
@@ -26,7 +26,7 @@ type BuyingGroupCardProps = {
 
 function SellerOfferCard({
   group,
-  mode = "browse",
+  // mode = "make-offer",
   makeOffer,
   numMembers,
   onLeave,
@@ -84,16 +84,16 @@ function SellerOfferCard({
       </div>
 
       <div className="functionality flex-1 flex flex-col justify-center items-end gap-2">
-        {mode === "browse" && (
-          <button
-            onClick={() => makeOffer?.(group.id)}
-            className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 font-semibold"
-          >
-            Make Offer
-          </button>
-        )}
+        {/* {mode === "make-offer" && ( */}
+        <button
+          onClick={() => makeOffer?.(group.id)}
+          className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 font-semibold"
+        >
+          Make Offer
+        </button>
+        {/* )} */}
 
-        {mode === "joined" && (
+        {/* {mode === "joined" && (
           <button
             onClick={() => onLeave?.(group.id)}
             className="px-6 py-2 border-2 border-gray-400 text-gray-700 rounded hover:bg-gray-300 font-medium"
@@ -111,7 +111,7 @@ function SellerOfferCard({
               Make Offer
             </button>
           </>
-        )}
+        )} */}
       </div>
     </div>
   );
