@@ -2,57 +2,113 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
 import supabase from "../../supabaseClient";
 import BuyingGroupCard from "./buying-group-card";
+import type {
+  CompleteBuyingGroupInfo,
+} from "../../types/api";
+import { useProfile } from "../../hooks/useProfile";
 import { useNavigate } from "react-router-dom";
 import SearchNavBar from "../../components/search-nav-bar/search-nav-bar";
-import type { BuyingGroup } from "../../types/api";
 import FilterBar from "../../components/filter-bar/filter-bar";
-
-// type Product = {
-//   id: number;
-//   name: string;
-//   description: string;
-//   id: number;
-//   name: string;
-//   description: string;
-// };
-
-// type BuyingGroup = {
-//   id: number;
-//   created_at: string;
-//   active: boolean;
-//   location: string;
-//   Products: Product;
-// };
+import {
+  fetchCompleteBuyingGroup,
+} from "../../utils/buyingGroupDetails";
+import type { Categories } from "../../types/api";
 
 function BuyingGroupDashboard() {
+  const { profile, error } = useProfile();
+  const [profileLoaded, setProfileLoaded] = useState(false);
   const navigate = useNavigate();
-  const [groups, setGroups] = useState<BuyingGroup[]>([]);
-  const [filteredGroups, setFilteredGroups] = useState<BuyingGroup[]>([]);
-
-  async function fetchGroups() {
-    const { data, error } = await supabase.from("BuyingGroups").select(`
-                *,
-                Products (*)
-            `);
-    if (error) {
-      console.error("Error fetching groups:", error);
-    }
-    setGroups(data ?? []);
-    setFilteredGroups(data ?? []);
-    console.log("Fetched groups:", data);
-  }
-
-  const handleJoin = async (groupId: number) => {
-    navigate(`/group/${groupId}`);
-  };
+  const [groups, setGroups] = useState<CompleteBuyingGroupInfo[]>([]);
+  const [filteredGroups, setFilteredGroups] = useState<
+    CompleteBuyingGroupInfo[]
+  >([]);
+  const [categories, setCategories] = useState<Categories[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [searchResults, setSearchResults] = useState<CompleteBuyingGroupInfo[] | null>(null);
 
   useEffect(() => {
-    fetchGroups();
+    const fetchCategories = async () => {
+      const { data, error } = await supabase.from("Categories").select("*");
+      if (error) throw error;
+      setCategories(data || []);
+    };
+    fetchCategories();
   }, []);
 
-  const handleSearchResults = (results: BuyingGroup[]) => {
-    setFilteredGroups(results.length > 0 ? results : groups);
+  useEffect(() => {
+    // Runs when profile is loaded
+    if (profile && !profileLoaded) {
+      setProfileLoaded(true);
+      fetchCompleteBuyingGroup().then((data) => {
+        setGroups(data);
+        setFilteredGroups(data);
+      });
+    }
+  }, [profile, profileLoaded]);
+
+  useEffect(() => {
+    // Runs once on component mount
+    fetchCompleteBuyingGroup().then((data) => {
+      setGroups(data);
+      setFilteredGroups(data);
+    });
+  }, []);
+
+  function onJoin(groupId: number) {
+    navigate(`/group/${groupId}`);
+  }
+
+  function onLeave(groupId: number) {
+    navigate(`/group/${groupId}`);
+  }
+
+  const handleSearchResults = (results: CompleteBuyingGroupInfo[]) => {
+    setSearchResults(results.length > 0 ? results : null);
+    
+    // Apply category filter on top of search results
+    const baseData = results.length > 0 ? results : groups;
+    if (selectedCategoryId !== null) {
+      const descendantIds = getDescendantIds(selectedCategoryId);
+      const categoryFiltered = baseData.filter((group) =>
+        descendantIds.includes(group.category_id)
+      );
+      setFilteredGroups(categoryFiltered);
+    } else {
+      setFilteredGroups(baseData);
+    }
   };
+
+  const getDescendantIds = (categoryId: number): number[] => {
+    const descendants = [categoryId];
+    const findChildren = (parentId: number) => {
+      const children = categories.filter((cat) => cat.parent_id === parentId);
+      children.forEach((child) => {
+        descendants.push(child.id);
+        findChildren(child.id);
+      });
+    };
+    findChildren(categoryId);
+    return descendants;
+  };
+
+  const handleFilterChange = (filtered: CompleteBuyingGroupInfo[], categoryId: number | null) => {
+    setSelectedCategoryId(categoryId);
+    
+    // If there are search results, apply the filter to them
+    // Otherwise apply filter to all groups
+    const baseData = searchResults || groups;
+    
+    if (categoryId === null) {
+      setFilteredGroups(baseData);
+    } else {
+      const descendantIds = getDescendantIds(categoryId);
+      const categoryFiltered = baseData.filter((group) =>
+        descendantIds.includes(group.category_id)
+      );
+      setFilteredGroups(categoryFiltered);
+    }
+  };
+
   return (
     <div className="dashboard-page flex flex-col size-full">
       <Navbar />
@@ -62,14 +118,19 @@ function BuyingGroupDashboard() {
         data={groups}
         onSearchResults={handleSearchResults}
       />
-      <FilterBar />
+      <FilterBar
+        categories={categories}
+        groups={groups}
+        onFilterChange={handleFilterChange}
+      />
       <div className="grid grid-cols-2 gap-8 p-8">
         {filteredGroups.map((item) => (
           <BuyingGroupCard
             key={item.id}
             group={item}
-            mode="browse"
-            onJoin={handleJoin}
+            onJoin={onJoin}
+            onLeave={onLeave}
+            numMembers={item.num_members}
           />
         ))}
       </div>

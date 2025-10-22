@@ -5,26 +5,62 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
+export interface CompleteBuyingGroupInfo {
+  id: number;
+  created_at: string;
+  active: boolean;
+  location: string;
+  product_id: number;
+  product_name: string;
+  product_desc: string;
+  category_id: number;
+  category_name: string;
+  num_members: number;
+}
+
+export interface Categories {
+    id: number,
+    category_name: string,
+    parent_id: number | null,
+}
+
 export interface Product {
   id: number;
   name: string;
   description?: string;
-  created_at?: string;
 }
 
 export interface BuyingGroup {
   id: number;
-  product_id: number;
   location: string;
-  created_at: string;
   active: boolean;
-  Products?: Product;
+  created_at: string;
+  product: Product;
+}
+
+export interface BuyingGroupRaw {
+  id: number;
+  location: string;
+  active: boolean;
+  created_at?: string;
+  Products: Product[];
+}
+
+export interface Profile {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  auth_id: string;
+  country_name: string;
+  phone_number: string;
+  postcode: string;
 }
 
 export interface BuyingGroupMember {
   id: number;
-  group_id: number;
-  buyer_id: number;
+  group: BuyingGroup;
+  buyer: Profile;
   joined_at?: string;
 }
 
