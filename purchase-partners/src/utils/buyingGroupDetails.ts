@@ -13,17 +13,32 @@ export type BuyingGroupDetails = {
   numMembers: number;
 };
 
-export async function fetchCompleteBuyingGroup(): Promise<
+export async function fetchCompleteBuyingGroup(buyer_id?: number): Promise<
   CompleteBuyingGroupInfo[]
 > {
-  const { data, error } = await supabase.from("BuyingGroupsWithCount").select(`
+  let query = supabase.from("BuyingGroupsWithCount").select(
+    `
         *,
         Products (
           *,
-            Categories (*)
+          Categories (*)
         ),
         BuyingGroupMembers(count)
-      `);
+      `
+  );
+  if (buyer_id !== undefined) {
+    const { data: memberGroups } = await supabase
+      .from("BuyingGroupMembers")
+      .select("group_id")
+      .eq("buyer_id", buyer_id);
+
+    const groupIds = memberGroups?.map((m) => m.group_id) ?? [];
+    if (groupIds.length === 0) {
+      return [];
+    }
+    query = query.in("id", groupIds);
+  }
+  const { data, error } = await query;
 
   if (error) {
     console.error("Error fetching data:", error);
@@ -39,12 +54,12 @@ export async function fetchCompleteBuyingGroup(): Promise<
       created_at: row.created_at,
       active: row.active,
       location: row.location,
-      product_id: row.product_id, 
+      product_id: row.product_id,
 
       product_name: product?.name ?? "",
-      product_desc: product?.description ?? "", 
+      product_desc: product?.description ?? "",
 
-      category_id: category?.id ?? 0, 
+      category_id: category?.id ?? 0,
       category_name: category?.category_name ?? "",
 
       // Map the calculated member count
@@ -131,7 +146,7 @@ async function isMember(groupId: number, profile?: Profile): Promise<boolean> {
   return data && data.length > 0;
 }
 
-async function getNumberOfMembers(groupId: number): Promise<number> {
+export async function getNumberOfMembers(groupId: number): Promise<number> {
   // return 0;
   const { count, error } = await supabase
     .from("BuyingGroupMembers")

@@ -44,7 +44,7 @@ function JoinedGroups() {
         return;
       }
 
-      const data = fetchCompleteBuyingGroup();
+      const data = fetchCompleteBuyingGroup(profile.id);
       setGroups(await data);
     }
 
