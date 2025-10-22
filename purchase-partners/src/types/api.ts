@@ -5,6 +5,25 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
+export interface CompleteBuyingGroupInfo {
+  id: number;
+  created_at: string;
+  active: boolean;
+  location: string;
+  product_id: number;
+  product_name: string;
+  product_desc: string;
+  category_id: number;
+  category_name: string;
+  num_members: number;
+}
+
+export interface Categories {
+    id: number,
+    category_name: string,
+    parent_id: number | null,
+}
+
 export interface Product {
   id: number;
   name: string;
