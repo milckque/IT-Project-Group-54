@@ -124,7 +124,7 @@ export async function fetchGroupDetails(
   return groupDetails;
 }
 
-async function isMember(groupId: number, profile?: Profile): Promise<boolean> {
+export async function isMember(groupId: number, profile?: Profile): Promise<boolean> {
   // return false;
   if (!profile) {
     return false;

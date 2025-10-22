@@ -95,9 +95,8 @@ function JoinedGroups() {
             <BuyingGroupCard
               key={group.id}
               group={group}
-              mode="joined"
+              mode= "joined"
               onLeave={onLeave}
-              numMembers={group.num_members}
             />
           ))}
         </div>
