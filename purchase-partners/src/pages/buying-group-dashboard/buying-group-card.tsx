@@ -1,6 +1,6 @@
 import { Bookmark } from "lucide-react";
 import { useState } from "react";
-import type { BuyingGroup, CompleteBuyingGroupInfo } from "../../types/api";
+import type { CompleteBuyingGroupInfo } from "../../types/api";
 
 export type CardMode = "browse" | "joined" | "created";
 
@@ -9,7 +9,6 @@ type BuyingGroupCardProps = {
   mode?: CardMode;
   onLeave?: (id: number) => void;
   onJoin?: (id: number) => void;
-  numMembers?: number;
 };
 
 function BuyingGroupCard({
@@ -17,7 +16,6 @@ function BuyingGroupCard({
   mode = "browse",
   onLeave,
   onJoin,
-  numMembers,
 }: BuyingGroupCardProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const expiryDate = group.created_at
@@ -57,7 +55,7 @@ function BuyingGroupCard({
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1">
               <span className="text-yellow-500">👥</span>
-              <span>Joined: {numMembers}</span>
+              <span>Joined: {group.num_members}</span>
             </div>
             <div className="flex items-center gap-1">
               <span className="text-green-600">💰</span>
