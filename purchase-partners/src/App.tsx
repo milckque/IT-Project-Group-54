@@ -83,7 +83,7 @@ function App() {
             path="/buying-group-seller/:id"
             element={<BuyingGroupPageSeller />}
           />
-          <Route path="/make-offer" element={<MakeOfferPage />} />
+          <Route path="/make-offer/:id" element={<MakeOfferPage />} />
         </Routes>
       </BrowserRouter>
     </>

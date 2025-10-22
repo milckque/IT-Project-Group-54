@@ -1,21 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Navbar from "../../components/navbar/navbar";
 import supabase from "../../supabaseClient";
+import { fetchGroupDetails } from "../../utils/buyingGroupDetails";
+import { useProfile } from "../../hooks/useProfile";
+import type { BuyingGroupDetails } from "../../utils/buyingGroupDetails";
 
 function MakeOfferPage() {
   const navigate = useNavigate();
+  const { profile, error } = useProfile();
+  const [profileLoaded, setProfileLoaded] = useState(false);
+  const [group, setGroup] = useState<BuyingGroupDetails | null>(null);
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
-  const group = location.state?.group;
+  // const group = location.state?.group;
 
   const [newOffer, setNewOffer] = useState("");
   const [quantity, setQuantity] = useState("Qty");
   const [description, setDescription] = useState("");
 
+  useEffect(() => {
+    if (id && profile && !profileLoaded) {
+      fetchGroupDetails(profile ?? undefined, Number(id)).then((data) => {
+        setGroup(data);
+      });
+      setProfileLoaded(true);
+      // console.log("Loaded with profile checking");
+    }
+  }, [id, profile]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // TODO: Submit offer to database
     console.log({
       groupId: id,
@@ -37,7 +53,7 @@ function MakeOfferPage() {
     //   ]);
 
     // Navigate back to the buying group page
-    navigate(`/buying-group/${id}`);
+    navigate(`/buying-group-seller/${id}`);
   };
 
   const handleDiscard = () => {
@@ -51,8 +67,8 @@ function MakeOfferPage() {
       {/* Search Bar Section */}
       <div className="bg-white px-6 py-4">
         <div className="flex items-center justify-between">
-          <button 
-            onClick={() => navigate('/offers')}
+          <button
+            onClick={() => navigate("/offers")}
             className="bg-[#FFC107] text-black font-semibold px-8 py-3 rounded-lg hover:bg-yellow-500 text-xl"
           >
             Offers
@@ -80,8 +96,18 @@ function MakeOfferPage() {
             </div>
           </div>
           <button className="p-2">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              className="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           </button>
         </div>
@@ -90,16 +116,15 @@ function MakeOfferPage() {
       {/* Breadcrumb */}
       <div className="bg-white px-6 pb-4">
         <div className="flex items-center gap-2 text-gray-600">
-          <a href="/dashboard" className="hover:text-gray-900">
+          <a href="/seller-dashboard" className="hover:text-gray-900">
             Home
           </a>
           <span>/</span>
-          <a href="/mobile-phones" className="hover:text-gray-900">
-            Mobile Phones
-          </a>
-          <span>/</span>
-          <a href={`/buying-group/${id}`} className="hover:text-gray-900">
-            {group?.Products?.name || "Samsung Galaxy Z Flip7 5G"}
+          <a
+            href={`/buying-group-seller/${id}`}
+            className="hover:text-gray-900"
+          >
+            {group?.group.product.name || "Samsung Galaxy Z Flip7 5G"}
           </a>
           <span>/</span>
           <span className="text-gray-900">Make Offer</span>
@@ -109,7 +134,7 @@ function MakeOfferPage() {
       {/* Main Content */}
       <div className="flex-1 bg-white px-16 py-8">
         <h1 className="text-5xl font-bold mb-8">
-          {group?.Products?.name || "Samsung Galaxy Z Flip7 5G"}
+          {group?.group.product.name || "Samsung Galaxy Z Flip7 5G"}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-8 max-w-3xl">

@@ -19,15 +19,6 @@ function BuyingGroupPageSeller() {
   const [group, setGroup] = useState<BuyingGroupDetails | null>(null);
 
   useEffect(() => {
-    if (id) {
-      fetchGroupDetails(profile ?? undefined, Number(id)).then((data) => {
-        setGroup(data);
-      });
-    }
-    // console.log("Loaded without profile checking");
-  }, [id]);
-
-  useEffect(() => {
     if (id && profile && !profileLoaded) {
       fetchGroupDetails(profile ?? undefined, Number(id)).then((data) => {
         setGroup(data);
@@ -36,6 +27,15 @@ function BuyingGroupPageSeller() {
       // console.log("Loaded with profile checking");
     }
   }, [id, profile]);
+
+  useEffect(() => {
+    if (id) {
+      fetchGroupDetails(profile ?? undefined, Number(id)).then((data) => {
+        setGroup(data);
+      });
+    }
+    // console.log("Loaded without profile checking");
+  }, [id]);
 
   //   useEffect(() => {
   //     async function fetchGroups() {
@@ -70,6 +70,10 @@ function BuyingGroupPageSeller() {
     // You would typically save this to Supabase here
   };
 
+  function makeAnOffer(id: string) {
+    navigate(`/make-offer/${id}`);
+  }
+
   return (
     <div className="dashboard-page flex flex-col size-full">
       <Navbar />
@@ -85,7 +89,7 @@ function BuyingGroupPageSeller() {
 
       <div className="bg-white px-6 pb-4">
         <div className="flex items-center gap-2 text-gray-600 mb-6">
-          <a href="/dashboard" className="hover:text-gray-900">
+          <a href="/seller-dashboard" className="hover:text-gray-900">
             Home
           </a>
           <span>/</span>
@@ -106,18 +110,6 @@ function BuyingGroupPageSeller() {
               {group?.group.product.description || "No description available."}
             </p>
 
-            {/* Preferences - if you have them */}
-            {/* {group?.preferences && (
-              <>
-                <p className="text-xl font-poppins ml-4 mt-2">Preferences:</p>
-                <ul className="text-base font-poppins ml-8 list-disc">
-                  <li>Base model or Pro versions considered</li>
-                  <li>256 GB storage or higher</li>
-                  <li>Any colour</li>
-                </ul>
-              </>
-            )} */}
-
             {/* Brand */}
             <p className="text-2xl font-poppins mt-6">Brand</p>
             {/* <p className="text-lg font-poppins ml-4">
@@ -132,7 +124,7 @@ function BuyingGroupPageSeller() {
 
             {/* Make an Offer Button */}
             <button
-              onClick={() => navigate("/make-offer")}
+              onClick={() => makeAnOffer(id ?? "")}
               className="bg-[#E52D2D] w-full text-white rounded-lg hover:bg-red-600 font-medium text-xl font-inter px-8 py-3"
             >
               Make an Offer
