@@ -1,16 +1,12 @@
 import Navbar from "../../components/navbar/navbar";
 import SearchNavBar from "../../components/search-nav-bar/search-nav-bar";
 import BuyingGroupCard from "../buying-group-dashboard/buying-group-card";
-import type { BuyingGroupDetails } from "../../utils/buyingGroupDetails";
 import { useProfile } from "../../hooks/useProfile";
 import { useEffect, useState } from "react";
-import supabase from "../../supabaseClient";
-import type { CompleteBuyingGroupInfo, Profile } from "../../types/api";
+import type { CompleteBuyingGroupInfo } from "../../types/api";
 import {
-  fetchCompleteBuyingGroup,
-  getNumberOfMembers,
+  fetchCompleteBuyingGroup
 } from "../../utils/buyingGroupDetails";
-import { coerceGroupType } from "../../utils/typeHelpers";
 import { useNavigate } from "react-router-dom";
 
 // Sample data for joined groups

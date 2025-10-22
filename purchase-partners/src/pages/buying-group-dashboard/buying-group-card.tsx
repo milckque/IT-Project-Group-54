@@ -1,6 +1,6 @@
 import { Bookmark } from "lucide-react";
 import { useState } from "react";
-import type { BuyingGroup, CompleteBuyingGroupInfo } from "../../types/api";
+import type { CompleteBuyingGroupInfo } from "../../types/api";
 
 export type CardMode = "browse" | "joined" | "created";
 
