@@ -103,12 +103,12 @@ function SellerOffers() {
     return (
         <div className="min-h-screen bg-white">
             <Navbar />
-            <SearchNavBar buttonText="Offers" buttonLink="/seller-offers" />
+            <SearchNavBar buttonText="Offers" buttonLink="/seller-offers" data={[]} />
 
             <div className="px-6 pb-4">
                 {/* Breadcrumb */}
                 <div className="flex items-center gap-2 text-gray-600 mb-6">
-                    <a href="/dashboard" className="hover:text-gray-900">Home</a>
+                    <a href="/seller-dashboard" className="hover:text-gray-900">Home</a>
                     <span>/</span>
                     <span>Offers</span>
                 </div>

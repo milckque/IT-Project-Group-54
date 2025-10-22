@@ -6,9 +6,44 @@ const supabaseKey =
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const { data, error } = await supabase
-  .from("BuyingGroups")
-  .select("*, Products(*)");
+// const { data, error } = await supabase
+//   .from("BuyingGroups")
+//   .select("*, Products(*)");
+
+// if (error) {
+//   console.error("Error fetching data:", error);
+// } else {
+//   const flattened = data.map((row) => ({
+//     id: row.id,
+//     created_at: row.created_at,
+//     active: row.active,
+//     location: row.location,
+//     product_id: row.product_id,
+//     product_name: row.Products.name,
+//     product_description: row.Products.description,
+//   }));
+//   console.log(flattened);
+// }
+
+// const { data, error } = await supabase
+//   .from("Categories")
+//   .select("*");
+
+// if (error) {
+//   console.error("Error fetching data:", error);
+// } else {
+//   console.log(data);
+// }
+
+const { data, error } = await supabase.from("BuyingGroupsWithCount").select(`
+    *,
+    Products (
+      *,
+        Categories (*)
+      )
+    ),
+    BuyingGroupMembers(count)
+  `);
 
 if (error) {
   console.error("Error fetching data:", error);
@@ -19,8 +54,11 @@ if (error) {
     active: row.active,
     location: row.location,
     product_id: row.product_id,
-    product_name: row.Products.name,
-    product_description: row.Products.description,
+    product_name: row.Products?.name ?? null,
+    product_description: row.Products?.description ?? null,
+    category_id: row.Products?.category_id ?? null,
+    category_name: row.Products?.Categories?.category_name ?? null,
+    num_members: row.nummembers,
   }));
-  console.log(flattened);
+  console.log(data);
 }
