@@ -29,6 +29,7 @@ const SideBar = forwardRef<HTMLDivElement, { isOpen?: boolean }>(
         <div className="body flex flex-col space-y-2">
           <SideBarItem title="Groups" href="/joined-groups" />
           <SideBarItem title="Vouchers" href="/vouchers" />
+          <SideBarItem title="Tutorial" href="/tutorial" />
           {user ? (
             <div className="mt-auto">
               <SideBarItem

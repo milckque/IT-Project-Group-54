@@ -13,6 +13,7 @@ import BuyingGroupPage from "./pages/buying-group-dashboard/buying-group-page";
 import BuyingGroupPageSeller from "./pages/buying-group-dashboard/buying-group-page-seller";
 import MakeOfferPage from './pages/buying-group-dashboard/make-an-offer';
 import VouchersPage from './pages/vouchers/voucher-page';
+import TutorialPage from './pages/tutorial/tutorial';
 
 function App() {
   // return (
@@ -82,11 +83,9 @@ function App() {
           <Route path="/buying-group-seller" element={<BuyingGroupPageSeller />} />
           <Route path="/make-offer" element={<MakeOfferPage />} />
           <Route path="/vouchers" element={<VouchersPage />} />
-          <Route
-            path="/buying-group-seller/:id"
-            element={<BuyingGroupPageSeller />}
-          />
+          <Route path="/buying-group-seller/:id" element={<BuyingGroupPageSeller />} />
           <Route path="/make-offer/:id" element={<MakeOfferPage />} />
+          <Route path="/tutorial" element={<TutorialPage />} />
         </Routes>
       </BrowserRouter>
     </>

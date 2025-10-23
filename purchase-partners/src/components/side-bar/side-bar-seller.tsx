@@ -30,6 +30,7 @@ const SideBarSeller = forwardRef<HTMLDivElement, { isOpen?: boolean }>(
           <SideBarItem title="Account" href="/seller-dashboard" />
           <SideBarItem title="Offers" href="/seller-offers" />
           <SideBarItem title="Vouchers" href="/vouchers" />
+          <SideBarItem title="Tutorial" href="/tutorial" />
           {user ? (
             <div className="mt-auto pt-2">
               <SideBarItem

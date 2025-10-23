@@ -47,9 +47,17 @@ function Landing() {
           SELL
         </a>
 
+        {/* Tutorial Link */}
+        <a
+          href="/tutorial"
+          className="m-4 text-yellow-500 hover:text-yellow-600 text-center font-poppins font-semibold underline text-lg"
+        >
+          ❓ How does GroupBuy work?
+        </a>
+
         <a
           href="/dashboard"
-          className="m-4 text-yellow-500 text-center font-poppins"
+          className="m-2 text-yellow-500 text-center font-poppins"
         >
           Continue as Guest
         </a>
