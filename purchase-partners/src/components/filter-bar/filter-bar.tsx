@@ -3,7 +3,7 @@ import { SlidersHorizontal } from "lucide-react";
 import { CategoryTreeFilter } from "./category-tree-filter";
 import type { Categories, CompleteBuyingGroupInfo } from "../../types/api";
 
-interface FilterBarProps {
+export interface FilterBarProps {
   categories?: Categories[];
   groups?: CompleteBuyingGroupInfo[];
   onFilterChange?: (

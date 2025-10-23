@@ -48,7 +48,7 @@ function BuyingGroupCard({
       <div className="details flex-3 flex flex-col justify-between pr-4">
         <div>
           <p className="text-sm text-gray-600 mb-1 italic">
-            {group.product_name ? "Mobile phones" : ""}
+            {group.category_name ? group.category_name : "General"}
           </p>
           <h2 className="text-2xl font-bold mb-3">{group.product_name}</h2>
 
@@ -65,7 +65,7 @@ function BuyingGroupCard({
         </div>
 
         <p className="text-xs text-gray-500">
-          Expired: {expiryDate ? expiryDate.toLocaleDateString() : "N/A"}
+          Expires: {expiryDate ? expiryDate.toLocaleDateString() : "N/A"}
         </p>
       </div>
 

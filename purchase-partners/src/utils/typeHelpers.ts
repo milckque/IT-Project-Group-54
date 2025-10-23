@@ -1,4 +1,4 @@
-import type { BuyingGroup, BuyingGroupRaw, Product, Profile } from '../types/api';
+import type { BuyingGroup, BuyingGroupRaw } from '../types/api';
 
 export function coerceGroupType(group: BuyingGroupRaw): BuyingGroup {
     const tempGroup = {

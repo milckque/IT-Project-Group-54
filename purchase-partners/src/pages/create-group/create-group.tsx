@@ -4,23 +4,51 @@ import SearchNavBar from "../../components/search-nav-bar/search-nav-bar";
 import supabase from "../../supabaseClient";
 import z, { type ZodSafeParseResult } from "zod";
 import { useProfile } from "../../hooks/useProfile";
+import CreateGroupCategory from "../../components/create-group-component/create-group-category";
+import { useEffect, useState } from "react";
+import type { Categories } from "../../types/api";
 
 const userSchema = z.object({
     productName: z.string().min(1, "Product name is required").max(127, "Product name is too long"),
-    category: z.string().min(1, "Category is required"),
-    brand: z.string().optional(),
-    expiry: z.string().optional(),
+    category: z.number().min(1, "Category is required").or(z.undefined()),
     description: z.string().optional(),
 });
 
 function CreateGroup() {
     const navigate = useNavigate();
     const { profile, error } = useProfile();
+    const [categories, setCategories] = useState<Categories[]>([]);
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+        null
+    );
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const { data, error } = await supabase.from("Categories").select("*");
+            if (error) throw error;
+            setCategories(data || []);
+        };
+        fetchCategories();
+    }, []);
+
+    const getDescendantIds = (categoryId: number): number[] => {
+        const descendants = [categoryId];
+        const findChildren = (parentId: number) => {
+            const children = categories.filter((cat) => cat.parent_id === parentId);
+            children.forEach((child) => {
+                descendants.push(child.id);
+                findChildren(child.id);
+            });
+        };
+        findChildren(categoryId);
+        return descendants;
+    };
 
     async function insertGroup(formValues: ZodSafeParseResult<any>) {
         const productData = {
             name: formValues.data.productName,
             description: formValues.data.description || "",
+            category_id: selectedCategoryId || null,
         }
 
         const { data: product } = await supabase
@@ -32,7 +60,7 @@ function CreateGroup() {
         const buyingGroupData = {
             location: profile?.country_name.toString() + " " + profile?.postcode.toString() || "Unknown Location",
             active: true,
-            product_id: product.id 
+            product_id: product.id
         }
 
         const { data: buyingGroup } = await supabase
@@ -46,6 +74,7 @@ function CreateGroup() {
     const handleSubmit = (formData: FormData) => {
         const formValues = Object.fromEntries(formData);
         const result = userSchema.safeParse(formValues)
+        console.log("Form submission result:", result);
 
         if (result.success) {
             console.log("Form is valid:", result.data);
@@ -85,7 +114,12 @@ function CreateGroup() {
                         {/* Category */}
                         <div className="flex items-center">
                             <label className="w-40 text-left text-lg font-normal">Category:</label>
-                            <select 
+                            <CreateGroupCategory
+                                categories={ categories }
+                                selectedCategoryId={selectedCategoryId}
+                                setSelectedCategoryId={setSelectedCategoryId}
+                            />
+                            {/* <select 
                                 className="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400" 
                                 id="category"
                                 name="category"
@@ -96,11 +130,11 @@ function CreateGroup() {
                                 <option value="electronics">Electronics</option>
                                 <option value="transport">Transport</option>
                                 <option value="householdAppliances">Household Appliances</option>
-                            </select>
+                            </select> */}
                         </div>
 
                         {/* Brand */}
-                        <div className="flex items-center">
+                        {/* <div className="flex items-center">
                             <label className="w-40 text-left text-lg font-normal">Brand:</label>
                             <input
                                 type="text"
@@ -109,7 +143,7 @@ function CreateGroup() {
                                 id="brand"
                                 name="brand"
                             />
-                        </div>
+                        </div> */}
 
                         {/* Description */}
                         <div className="flex items-start">

@@ -131,8 +131,9 @@ export function CategoryTreeFilter({
           {hasChildren && (
             <button
               onClick={(e) => {
-                e.stopPropagation()
-                toggleExpanded(node.value.id)
+                e.preventDefault();
+                e.stopPropagation();
+                toggleExpanded(node.value.id);
               }}
               style={{
                 background: 'none',
