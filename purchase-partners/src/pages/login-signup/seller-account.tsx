@@ -19,6 +19,12 @@ const signupSchema = z.object({
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
+  confirmPassword: z
+    .string()
+    .min(8, { message: "Please confirm your password" }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 const loginSchema = z.object({
@@ -247,6 +253,24 @@ function SellerAccount() {
                       {signupForm.formState.errors.password && (
                         <p className="text-red-500 text-sm">
                           {signupForm.formState.errors.password.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* confirm password */}
+                    <div className="mt-4">
+                      <label className="block font-poppins text-sm font-medium mb-1">
+                        Confirm Password
+                      </label>
+                      <input
+                        {...signupForm.register("confirmPassword")}
+                        type="password"
+                        placeholder="Confirm Password"
+                        className="border w-170 p-2 rounded-lg"
+                      />
+                      {signupForm.formState.errors.confirmPassword && (
+                        <p className="text-red-500 text-sm">
+                          {signupForm.formState.errors.confirmPassword.message}
                         </p>
                       )}
                     </div>
