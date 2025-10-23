@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Bookmark, Bell } from "lucide-react";
 import type { BuyingGroup } from "../../types/api";
+import type { CompleteBuyingGroupInfo } from "../../types/api";
 
 export type CardMode = "make-offer";
 
@@ -16,7 +17,7 @@ export type CardMode = "make-offer";
 // };
 
 type BuyingGroupCardProps = {
-  group: BuyingGroup;
+  group: CompleteBuyingGroupInfo;
   mode?: CardMode;
   makeOffer?: (id: number) => void;
   onJoin?: (id: number) => void;
@@ -62,9 +63,9 @@ function SellerOfferCard({
       <div className="details flex-3 flex flex-col justify-between pr-4">
         <div>
           <p className="text-sm text-gray-600 mb-1 italic">
-            {group.product?.name ? "Mobile phones" : ""}
+            {group.product_name ? "Mobile phones" : ""}
           </p>
-          <h2 className="text-2xl font-bold mb-3">{group.product?.name}</h2>
+          <h2 className="text-2xl font-bold mb-3">{group.product_name}</h2>
 
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1">

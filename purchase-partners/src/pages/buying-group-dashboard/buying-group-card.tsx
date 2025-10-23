@@ -82,7 +82,7 @@ function BuyingGroupCard({
         {mode === "joined" && (
           <button
             onClick={() => onLeave?.(group.id)}
-            className="px-6 py-2 border-2 border-gray-400 text-gray-700 rounded hover:bg-gray-300 font-medium"
+            className="px-9 py-3 border-2 border-gray-400 text-gray-700 rounded-lg hover:bg-gray-300 font-medium"
           >
             Leave
           </button>
@@ -92,7 +92,7 @@ function BuyingGroupCard({
           <>
             <button
               onClick={() => onLeave?.(group.id)}
-              className="px-6 py-2 border-2 border-gray-400 text-gray-700 rounded hover:bg-gray-300 font-medium"
+              className="px-6 py-3 border-2 border-gray-400 text-gray-700 rounded hover:bg-gray-300 font-medium"
             >
               Leave
             </button>

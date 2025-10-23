@@ -5,6 +5,8 @@ import supabase from "../../supabaseClient";
 import { fetchGroupDetails } from "../../utils/buyingGroupDetails";
 import { useProfile } from "../../hooks/useProfile";
 import type { BuyingGroupDetails } from "../../utils/buyingGroupDetails";
+import type { CreateOfferRequest } from "../../types/api";
+import type { Offer } from "../../types/api";
 
 function MakeOfferPage() {
   const navigate = useNavigate();
@@ -15,9 +17,10 @@ function MakeOfferPage() {
   const location = useLocation();
   // const group = location.state?.group;
 
-  const [newOffer, setNewOffer] = useState("");
+  const [newOffer, setNewOffer] = useState(0);
   const [quantity, setQuantity] = useState("Qty");
   const [description, setDescription] = useState("");
+  const [minThreshold, setMinThreshold] = useState(1);
 
   useEffect(() => {
     if (id && profile && !profileLoaded) {
@@ -29,13 +32,44 @@ function MakeOfferPage() {
     }
   }, [id, profile]);
 
+  useEffect(() => {
+    if (id) {
+      fetchGroupDetails(profile ?? undefined, Number(id)).then((data) => {
+        setGroup(data);
+      });
+    }
+    // console.log("Loaded without profile checking");
+  }, [id]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const offerData: CreateOfferRequest = {
+      group_id: id!,
+      price: newOffer,
+      min_threshold: minThreshold,
+    };
+
+    const { data: offer } = await supabase
+      .from("Offers")
+      .insert([offerData])
+      .select()
+      .single();
+    console.log("Created offer");
+
+    // const CompletedOfferData : Offer = {
+    //   id: offer.id,
+    //   group_id: offer.group_id,
+    //   seller_id: profile?.id || 0,
+    //   price: offer.price ? offer.price : 0,
+    //   min_threshold: offer.min_threshold,
+    // };
 
     // TODO: Submit offer to database
     console.log({
       groupId: id,
       newOffer,
+      minThreshold,
       quantity,
       description,
     });
@@ -143,18 +177,33 @@ function MakeOfferPage() {
             <label className="text-2xl font-medium min-w-[250px]">
               Current Offer:
             </label>
-            <div className="text-2xl">25% Off</div>
+            <div className="text-2xl">None</div>
           </div>
 
           {/* New Offer */}
           <div className="flex items-center gap-8">
-            <label className="text-2xl font-medium min-w-[250px] text-gray-400">
+            <label className="text-2xl font-medium min-w-[250px] text-black">
               New Offer:
             </label>
             <input
-              type="text"
+              type="number"
               value={newOffer}
-              onChange={(e) => setNewOffer(e.target.value)}
+              onChange={(e) => setNewOffer(Number(e.target.value))}
+              placeholder="$$$"
+              className="px-4 py-2 border-b-2 border-gray-300 focus:border-gray-500 outline-none text-xl bg-gray-50"
+              required
+            />
+          </div>
+
+          {/* Threshold */}
+          <div className="flex items-center gap-8">
+            <label className="text-2xl font-medium min-w-[250px] text-black">
+              Threshold:
+            </label>
+            <input
+              type="number"
+              value={minThreshold}
+              onChange={(e) => setMinThreshold(Number(e.target.value))}
               placeholder="$$$"
               className="px-4 py-2 border-b-2 border-gray-300 focus:border-gray-500 outline-none text-xl bg-gray-50"
               required

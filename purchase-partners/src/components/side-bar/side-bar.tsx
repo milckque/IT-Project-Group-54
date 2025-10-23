@@ -22,7 +22,9 @@ const SideBar = forwardRef<HTMLDivElement, { isOpen?: boolean }>(
         style={sidebarStyles(isOpen)}
         className={`side-bar bg-yellow-200 h-full flex flex-col space-y-4 p-4 border-b border-gray-300 absolute top-0 z-10 overflow-hidden`}
       >
-        <div className="header w-full flex items-center justify-center py-3 text-3xl ">Hello, {profile?.first_name ?? "there"}!</div>
+        <div className="header w-full flex items-center justify-center py-3 text-3xl ">
+          Hello, {profile?.first_name ?? "there"}!
+        </div>
 
         <div className="body flex flex-col space-y-2">
           <SideBarItem title="Groups" href="/joined-groups" />
@@ -39,7 +41,7 @@ const SideBar = forwardRef<HTMLDivElement, { isOpen?: boolean }>(
               />
             </div>
           ) : (
-            <SideBarItem title="Login" href="/login" />
+            <SideBarItem title="Login" href="/" />
           )}
         </div>
       </div>

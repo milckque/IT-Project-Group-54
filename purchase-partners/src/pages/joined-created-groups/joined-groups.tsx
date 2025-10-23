@@ -4,9 +4,7 @@ import BuyingGroupCard from "../buying-group-dashboard/buying-group-card";
 import { useProfile } from "../../hooks/useProfile";
 import { useEffect, useState } from "react";
 import type { CompleteBuyingGroupInfo } from "../../types/api";
-import {
-  fetchCompleteBuyingGroup
-} from "../../utils/buyingGroupDetails";
+import { fetchCompleteBuyingGroup } from "../../utils/buyingGroupDetails";
 import { useNavigate } from "react-router-dom";
 
 // Sample data for joined groups
@@ -63,7 +61,7 @@ function JoinedGroups() {
             Home
           </a>
           <span>/</span>
-          <span>Groups</span>
+          <span>Joined Groups</span>
         </div>
 
         {/* Tab Navigation */}
@@ -91,7 +89,7 @@ function JoinedGroups() {
             <BuyingGroupCard
               key={group.id}
               group={group}
-              mode= "joined"
+              mode="joined"
               onLeave={onLeave}
             />
           ))}
