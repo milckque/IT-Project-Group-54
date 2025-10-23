@@ -26,7 +26,7 @@ function Landing() {
               href="/tutorial"
               className="block mt-4 text-yellow-600 hover:text-yellow-700 font-medium text-sm"
             >
-              Still confused? Click here to learn more:
+              Click here to learn how it works:
             </a>
           </div>
         </div>
