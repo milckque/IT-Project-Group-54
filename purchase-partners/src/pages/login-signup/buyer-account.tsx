@@ -131,7 +131,7 @@ export default function BuyerAccount() {
         style={{ backgroundImage: "url('./bg.png')" }}
       ></div>
 
-      <div className="flex-[5] bg-whtie items-center">
+      <div className="flex-[5] bg-whtie items-center justify-center flex">
         <div className="m-5 bg-[#E3DBD9]/50 p-6 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="m-5 flex flex-col items-center">

@@ -77,7 +77,7 @@ function SellerAccount() {
         style={{ backgroundImage: "url('./bg.png')" }}
       ></div>
 
-      <div className="flex-[5] bg-whtie items-center">
+      <div className="flex-[5] bg-whtie items-center justify-center flex">  
         <div className="m-5 bg-[#E3DBD9]/50 p-6 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="m-5 flex flex-col items-center">
@@ -240,40 +240,40 @@ function SellerAccount() {
                     </div>
 
                     {/* password */}
-                    <div className="mt-4">
-                      <label className="block font-poppins text-sm font-medium mb-1">
-                        Password
-                      </label>
-                      <input
-                        {...signupForm.register("password")}
-                        type="password"
-                        placeholder="Password"
-                        className="border w-170 p-2 rounded-lg"
-                      />
-                      {signupForm.formState.errors.password && (
-                        <p className="text-red-500 text-sm">
-                          {signupForm.formState.errors.password.message}
-                        </p>
-                      )}
-                    </div>
+                  <div className="mt-4">
+                    <label className="block font-poppins text-sm font-medium mb-1">
+                      Password
+                    </label>
+                    <input
+                      {...signupForm.register("password")}
+                      type="password"
+                      placeholder="Password"
+                      className="border w-170 p-2 rounded-lg"
+                    />
+                    {signupForm.formState.errors.password && (
+                      <p className="text-red-500 text-sm">
+                        {signupForm.formState.errors.password.message}
+                      </p>
+                    )}
+                  </div>
 
-                    {/* confirm password */}
-                    <div className="mt-4">
-                      <label className="block font-poppins text-sm font-medium mb-1">
-                        Confirm Password
-                      </label>
-                      <input
-                        {...signupForm.register("confirmPassword")}
-                        type="password"
-                        placeholder="Confirm Password"
-                        className="border w-170 p-2 rounded-lg"
-                      />
-                      {signupForm.formState.errors.confirmPassword && (
-                        <p className="text-red-500 text-sm">
-                          {signupForm.formState.errors.confirmPassword.message}
-                        </p>
-                      )}
-                    </div>
+                  {/* confirm password */}
+                  <div className="mt-4">
+                    <label className="block font-poppins text-sm font-medium mb-1">
+                      Confirm Password
+                    </label>
+                    <input
+                      {...signupForm.register("confirmPassword")}
+                      type="password"
+                      placeholder="Confirm Password"
+                      className="border w-170 p-2 rounded-lg"
+                    />
+                    {signupForm.formState.errors.confirmPassword && (
+                      <p className="text-red-500 text-sm">
+                        {signupForm.formState.errors.confirmPassword.message}
+                      </p>
+                    )}
+                  </div>
 
                     {/* submit button */}
                     <div className="flex mt-10 items-center">
