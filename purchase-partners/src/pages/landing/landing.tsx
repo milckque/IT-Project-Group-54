@@ -5,12 +5,12 @@ function Landing() {
         <img
           src="./bg.png"
           alt="background"
-          className="absolute left-0 top-0 h-screen w-auto object-cover object-left max-w-none"
+          className="absolute inset-0 h-full w-full object-cover"
         />
 
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-[85%] max-w-xl">
-          <div className="bg-white/95 p-6 md:p-8 rounded-2xl shadow-xl text-left">
-            <h2 className="font-inter text-2xl md:text-3xl font-bold mb-2 text-yellow-500">
+        <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12">
+          <div className="bg-white/95 max-w-md w-full p-6 md:p-8 rounded-2xl shadow-xl">
+            <h2 className="font-inter text-2xl md:text-3xl font-bold mb-4 text-yellow-500">
               Purchase Partners
             </h2>
             <p className="font-inter text-sm md:text-base leading-relaxed text-gray-700">
