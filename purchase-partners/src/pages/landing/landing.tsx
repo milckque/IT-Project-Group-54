@@ -21,6 +21,13 @@ function Landing() {
               buyers unlock better deals while sellers reach committed customers
               at lower marketing cost.
             </p>
+            
+            <a
+              href="/tutorial"
+              className="block mt-4 text-yellow-600 hover:text-yellow-700 font-medium text-sm"
+            >
+              Still confused? Click here to learn more:
+            </a>
           </div>
         </div>
       </div>
@@ -47,17 +54,9 @@ function Landing() {
           SELL
         </a>
 
-        {/* Tutorial Link */}
-        <a
-          href="/tutorial"
-          className="m-4 text-yellow-500 hover:text-yellow-600 text-center font-poppins font-semibold underline text-lg"
-        >
-          ❓ How does GroupBuy work?
-        </a>
-
         <a
           href="/dashboard"
-          className="m-2 text-yellow-500 text-center font-poppins"
+          className="m-4 text-yellow-500 text-center font-poppins"
         >
           Continue as Guest
         </a>
