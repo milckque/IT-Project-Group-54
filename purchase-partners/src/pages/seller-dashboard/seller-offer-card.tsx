@@ -42,33 +42,6 @@ function SellerOfferCard({
       )
     : null;
 
-  // console.log("Group in Card:", group);
-
-  // // Very hacky
-  // async function getProductCategoryName(product_id: number): Promise<string> {
-  //   const { data, error } = await supabase
-  //     .from("Products")
-  //     .select("category_id")
-  //     .eq("id", product_id)
-  //     .single();
-
-  //   if (error) {
-  //     console.error("Error fetching product category:", error);
-  //     return "Unknown";
-  //   }
-  //   if (data.category_id == null) {
-  //     return "General";
-  //   }
-
-  //   const { data: categoryData, error: categoryError } = await supabase
-  //     .from("Categories")
-  //     .select("category_name")
-  //     .eq("id", data.category_id)
-  //     .single();
-
-  //   return categoryData?.category_name || "Unknown";
-  // }
-
   return (
     <div
       key={group.id}

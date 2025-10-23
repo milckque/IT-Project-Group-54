@@ -80,12 +80,19 @@ function CreateGroup() {
             console.log("Form is valid:", result.data);
             insertGroup(result);
         }
+
+        navigate('/dashboard');
     };
 
     return (
         <div className="dashboard-page flex flex-col size-full bg-gray-900">
             <Navbar />
-            <SearchNavBar buttonText="Create Group" />
+            <SearchNavBar
+                buttonText="Create Group"
+                buttonLink="/create-group"
+                data={[]}
+                onSearchResults={() => { }}
+            />
 
             <div className="bg-white px-6 pb-4">
                 <div className="flex items-center gap-2 text-gray-600 mb-6">
@@ -115,7 +122,7 @@ function CreateGroup() {
                         <div className="flex items-center">
                             <label className="w-40 text-left text-lg font-normal">Category:</label>
                             <CreateGroupCategory
-                                categories={ categories }
+                                categories={categories}
                                 selectedCategoryId={selectedCategoryId}
                                 setSelectedCategoryId={setSelectedCategoryId}
                             />

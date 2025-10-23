@@ -77,7 +77,6 @@ function App() {
           <Route path="/example" element={<ExamplePage />} />
           <Route path="*" element={<Navigate to="/" />} />
           <Route path="/joined-groups" element={<JoinedGroups />} />
-          <Route path="/created-groups" element={<CreatedGroups />} />
           <Route path="/group/:id" element={<BuyingGroupPage />} />
           <Route path="/seller-offers" element={<SellerOffers />} />
           <Route path="/buying-group-seller" element={<BuyingGroupPageSeller />} />

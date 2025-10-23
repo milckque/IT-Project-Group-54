@@ -27,7 +27,12 @@ function CreatedGroups() {
     return (
         <div className="min-h-screen bg-white">
             <Navbar />
-            <SearchNavBar buttonText="Create Group" buttonLink="/create-group" />
+            <SearchNavBar
+                buttonText="Create Group"
+                buttonLink="/create-group"
+                data={[]}
+                onSearchResults={() => { }}
+            />
 
             <div className="px-6 pb-4">
                 {/* Breadcrumb */}
@@ -58,14 +63,14 @@ function CreatedGroups() {
 
                 {/* Groups List */}
                 <div className="grid grid-cols-2 gap-8">
-                    {createdGroups.map((group) => (
+                    {/* {createdGroups.map((group) => (
                         <BuyingGroupCard
                         key={group.id}
                         group={group}
                         mode="created"
                         onLeave={handleLeave}
                         />
-                    ))}
+                    ))} */}
                 </div>
             </div>
         </div>

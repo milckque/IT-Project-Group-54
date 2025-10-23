@@ -110,7 +110,6 @@ export async function fetchGroupDetails(
   if (error) {
     console.error("Error fetching groups:", error);
   }
-  let temp = await isMember(data.id, profile);
 
   const groupDetails: BuyingGroupDetails = {
     group: coerceGroupType(data),
@@ -157,4 +156,19 @@ export async function getNumberOfMembers(groupId: number): Promise<number> {
     return 0;
   }
   return (count as number) || 0;
+}
+
+
+export function getBuyerIconLightUp(num_members: number) {
+  if (num_members == 0) {
+    return 0;
+  } else if (num_members < 5) {
+    return 1;
+  } else if (num_members < 10) {
+    return 2;
+  } else if (num_members < 100) {
+    return 3;
+  } else {
+    return 4;
+  }
 }

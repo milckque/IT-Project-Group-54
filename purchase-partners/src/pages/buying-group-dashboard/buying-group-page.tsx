@@ -6,6 +6,7 @@ import type { BuyingGroupDetails } from "../../utils/buyingGroupDetails";
 import SearchNavBar from "../../components/search-nav-bar/search-nav-bar";
 import { fetchGroupDetails } from "../../utils/buyingGroupDetails";
 import { useProfile } from "../../hooks/useProfile";
+import { getBuyerIconLightUp } from "../../utils/buyingGroupDetails";
 
 function BuyingGroupPage() {
   const { profile, error } = useProfile();
@@ -142,11 +143,22 @@ function BuyingGroupPage() {
             <div className="relative w-40 h-10 mt-2">
               <div className="absolute w-97 h-20 rounded-lg bg-[#808080] opacity-20" />
               <div className="flex flex-row gap-2">
-                <img src="/Group_fill_grey.svg" alt="members" />
-                <img src="/Group_fill_grey.svg" alt="members" />
-                <img src="/Group_fill_grey.svg" alt="members" />
-                <img src="/Group_fill_grey.svg" alt="members" />
-                <img src="/Group_fill_grey.svg" alt="members" />
+                {Array.from({ length: getBuyerIconLightUp(group?.numMembers || 0) }).map((_, index) => (
+                  <img
+                    key={index}
+                    src="/Group_fill.svg"
+                    alt="active-members"
+                    className="z-1"
+                  />
+                ))}
+                {Array.from({ length: 5 - getBuyerIconLightUp(group?.numMembers || 0) }).map((_, index) => (
+                  <img
+                    key={index}
+                    src="/Group_fill_grey.svg"
+                    alt="inactive-members"
+                    className="z-1"
+                  />
+                ))}
               </div>
             </div>
           </div>

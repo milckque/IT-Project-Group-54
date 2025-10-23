@@ -9,6 +9,7 @@ import NotificationPopup from "../../components/notif-pop-up/notif-pop-up";
 import { fetchGroupDetails } from "../../utils/buyingGroupDetails";
 import { useProfile } from "../../hooks/useProfile";
 import type { BuyingGroupDetails } from "../../utils/buyingGroupDetails";
+import { getBuyerIconLightUp } from "../../utils/buyingGroupDetails";
 
 function BuyingGroupPageSeller() {
   const { profile, error } = useProfile();
@@ -112,9 +113,9 @@ function BuyingGroupPageSeller() {
 
             {/* Brand */}
             <p className="text-2xl font-poppins mt-6">Brand</p>
-            {/* <p className="text-lg font-poppins ml-4">
-              {group?.group.product.brand || "NA"}
-            </p> */}
+            <p className="text-lg font-poppins ml-4">
+              {group?.group.product.name.split(',')[0] || "NA"}
+            </p>
           </div>
 
           {/* Seller Action Buttons */}
@@ -147,34 +148,25 @@ function BuyingGroupPageSeller() {
             {/* Joined Buyers */}
             <div className="mt-8">
               <p className="text-xl font-medium font-poppins text-right">
-                Joined: {group?.numMembers || 608} Buyers
+                Joined: {group?.numMembers} Buyers
               </p>
               <div className="flex flex-row gap-2 mt-3 justify-end">
-                <img
-                  src="/Group_fill_grey.svg"
-                  alt="members"
-                  className="w-10 h-10"
-                />
-                <img
-                  src="/Group_fill_grey.svg"
-                  alt="members"
-                  className="w-10 h-10"
-                />
-                <img
-                  src="/Group_fill_grey.svg"
-                  alt="members"
-                  className="w-10 h-10"
-                />
-                <img
-                  src="/Group_fill_grey.svg"
-                  alt="members"
-                  className="w-10 h-10"
-                />
-                <img
-                  src="/Group_fill_grey.svg"
-                  alt="members"
-                  className="w-10 h-10"
-                />
+                {Array.from({ length: getBuyerIconLightUp(group?.numMembers || 0) }).map((_, index) => (
+                  <img
+                    key={index}
+                    src="/Group_fill.svg"
+                    alt="members"
+                    className="w-10 h-10"
+                  />
+                ))}
+                {Array.from({ length: 5 - getBuyerIconLightUp(group?.numMembers || 0) }).map((_, index) => (
+                  <img
+                    key={index}
+                    src="/Group_fill_grey.svg"
+                    alt="members"
+                    className="w-10 h-10"
+                  />
+                ))}
               </div>
             </div>
           </div>
