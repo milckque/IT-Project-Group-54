@@ -33,6 +33,7 @@ type LoginFields = z.infer<typeof loginSchema>;
 
 export default function BuyerAccount() {
   const [active, setActive] = useState<AuthMode>("login");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const navigate = useNavigate();
   const {
     signInWithEmail,
@@ -100,16 +101,19 @@ export default function BuyerAccount() {
 
   const handleLoginSubmit: SubmitHandler<LoginFields> = async (data) => {
     try {
+      setShowForgotPassword(false); // Reset on new attempt
       await signInWithEmail(data.email, data.password);
       if (user) {
         navigate("/dashboard");
       } else {
+        setShowForgotPassword(true);
         loginForm.setError("root", {
           message: authError || "Login failed. Please try again.",
         });
       }
     } catch (err: any) {
       const message = (err && err.message) || authError || "Login failed";
+      setShowForgotPassword(true);
       loginForm.setError("root", { message });
     }
   };
@@ -128,7 +132,10 @@ export default function BuyerAccount() {
               <div className="flex w-200 h-12 border-1 border-black rounded-lg overflow-hidden">
                 <button
                   type="button"
-                  onClick={() => setActive("signup")}
+                  onClick={() => {
+                    setActive("signup");
+                    setShowForgotPassword(false);
+                  }}
                   className={`flex-1 font-bold font-poppins ${
                     active === "signup"
                       ? "bg-black text-white"
@@ -140,7 +147,10 @@ export default function BuyerAccount() {
 
                 <button
                   type="button"
-                  onClick={() => setActive("login")}
+                  onClick={() => {
+                    setActive("login");
+                    setShowForgotPassword(false);
+                  }}
                   className={`flex-1 font-bold font-poppins ${
                     active === "login"
                       ? "bg-black text-white"
@@ -351,6 +361,18 @@ export default function BuyerAccount() {
                         </p>
                       )}
                     </div>
+
+                    {/* Forgot Password Button */}
+                    {showForgotPassword && (
+                      <div className="mt-3 w-170">
+                        <button
+                          type="button"
+                          className="text-sm text-blue-600 hover:text-blue-800 underline"
+                        >
+                          Forgot password?
+                        </button>
+                      </div>
+                    )}
 
                     <div className="flex mt-10 items-center">
                       <button
