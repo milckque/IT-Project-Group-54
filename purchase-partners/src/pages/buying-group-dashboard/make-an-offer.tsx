@@ -24,6 +24,10 @@ function MakeOfferPage() {
 
   useEffect(() => {
     if (id && profile && !profileLoaded) {
+      if (!profile.is_seller) {
+        navigate("/dashboard");
+        return;
+      }
       fetchGroupDetails(profile ?? undefined, Number(id)).then((data) => {
         setGroup(data);
       });

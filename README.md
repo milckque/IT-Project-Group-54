@@ -14,7 +14,12 @@ git clone https://github.com/milckque/IT-Project-Group-54.git
 
 2. **Navigate to the project folder**
 ```sh
-cd /purchase-partners
+cd purchase-partners
+```
+*Navigating to the right folder may not be as simple as the command above, depending on where you cloned or extracted the project.*
+This is an example if you want to use the full path (Windows example). You can get this path by right-clicking the folder and selecting "Copy as path".
+```sh
+cd C:\Users\YourUsername\Downloads\IT-Project-Group-54\purchase-partners
 ```
 
 3. **Install dependencies**
@@ -29,4 +34,10 @@ npm run dev
 ```
 - This will start the app locally.
 - The terminal will display a local URL (e.g., `http://localhost:5173`)-open this in your browser to view the app.
+
+5. **Stop the server**
+To stop the server, go to the terminal where it's running and press `Ctrl + C`.
+
+
+
 

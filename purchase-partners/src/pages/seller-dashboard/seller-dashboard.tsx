@@ -88,6 +88,10 @@ function SellerDashboard() {
     // Runs when profile is loaded
     if (profile && !profileLoaded) {
       setProfileLoaded(true);
+      if (!profile.is_seller) {
+        navigate("/dashboard");
+        return;
+      }
       fetchCompleteBuyingGroup().then((data) => {
         setGroups(data);
         setFilteredGroups(data);
@@ -168,9 +172,6 @@ function SellerDashboard() {
       {/* Navbar */}
       <Navbar />
 
-      {/* Search, Filters, and Sidebar */}
-      {/* <SellerOffersBar /> */}
-
       <SearchNavBarSeller
         buttonText="Create Group"
         buttonLink="/create-group"
@@ -178,16 +179,6 @@ function SellerDashboard() {
         onSearchResults={handleSearchResults}
       />
       <FilterBar />
-
-      {/* Main Content */}
-      {/* <div className="bg-white min-h-screen"> */}
-      {/* Product Cards */}
-      {/* <div className="px-6 space-y-4 pb-8">
-          {productOffers.map((offer) => (
-            <SellerOfferCard key={offer.id} offer={offer} />
-          ))}
-        </div>
-      </div> */}
 
       <div className="grid grid-cols-2 gap-8 p-8">
         {filteredGroups.map((item) => (

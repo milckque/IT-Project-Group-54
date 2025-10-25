@@ -55,6 +55,7 @@ export interface Profile {
   country_name: string;
   phone_number: string;
   postcode: string;
+  is_seller: boolean;
 }
 
 export interface BuyingGroupMember {

@@ -7,6 +7,7 @@ import { CountrySelect } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
 import { useAuth } from "../../backend/AuthContext";
 import supabase from "../../supabaseClient";
+import { useProfile } from "../../hooks/useProfile";
 
 type AuthMode = "signup" | "login";
 
@@ -40,6 +41,8 @@ type LoginFields = z.infer<typeof loginSchema>;
 export default function BuyerAccount() {
   const [active, setActive] = useState<AuthMode>("login");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const { profile: userProfile } = useProfile();
+  const [profileLoaded, setProfileLoaded] = useState(false);
   const navigate = useNavigate();
   const {
     signInWithEmail,
@@ -51,10 +54,15 @@ export default function BuyerAccount() {
 
   // If already logged in, redirect away from login/signup page
   useEffect(() => {
-    if (user) {
-      navigate("/dashboard");
-    }
-  }, [user, navigate]);
+      if (userProfile && !profileLoaded) {
+        setProfileLoaded(true);
+        if (userProfile.is_seller) {
+          navigate("/seller-dashboard");
+        } else {
+          navigate("/dashboard");
+        }
+      }
+  }, [user, userProfile, navigate]);
 
   const signupForm = useForm<SignupFields>({
     resolver: zodResolver(signupSchema),
@@ -94,6 +102,7 @@ export default function BuyerAccount() {
           country_name: data.country,
           phone_no: data.phoneNumber,
           postcode: data.postcode,
+          is_seller: false,
         },
       ]);
       if (insertErr) throw insertErr;
@@ -110,7 +119,7 @@ export default function BuyerAccount() {
       setShowForgotPassword(false); // Reset on new attempt
       await signInWithEmail(data.email, data.password);
       if (user) {
-        navigate("/dashboard");
+        navigate("/dasahboard");
       } else {
         setShowForgotPassword(true);
         loginForm.setError("root", {

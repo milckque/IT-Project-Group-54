@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom";
 import supabase from "../../supabaseClient";
 import Navbar from "../../components/navbar/navbar";
 import { useLocation, useParams } from "react-router-dom";
-import type { BuyingGroup } from "../../types/api";
-import SearchNavBar from "../../components/search-nav-bar/search-nav-bar";
-import NotificationPopup from "../../components/notif-pop-up/notif-pop-up";
 import { fetchGroupDetails } from "../../utils/buyingGroupDetails";
 import { useProfile } from "../../hooks/useProfile";
 import type { BuyingGroupDetails } from "../../utils/buyingGroupDetails";
@@ -14,13 +11,16 @@ import { getBuyerIconLightUp } from "../../utils/buyingGroupDetails";
 function BuyingGroupPageSeller() {
   const { profile, error } = useProfile();
   const [profileLoaded, setProfileLoaded] = useState(false);
-  const location = useLocation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [group, setGroup] = useState<BuyingGroupDetails | null>(null);
 
   useEffect(() => {
     if (id && profile && !profileLoaded) {
+      if (!profile.is_seller) {
+        navigate("/dashboard");
+        return;
+      }
       fetchGroupDetails(profile ?? undefined, Number(id)).then((data) => {
         setGroup(data);
       });

@@ -40,6 +40,10 @@ function BuyingGroupDashboard() {
     // Runs when profile is loaded
     if (profile && !profileLoaded) {
       setProfileLoaded(true);
+      if (profile.is_seller) {
+        navigate("/seller-dashboard");
+        return;
+      }
       fetchCompleteBuyingGroup().then((data) => {
         setGroups(data);
         setFilteredGroups(data);

@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { CountrySelect } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
+import { useAuth } from "../../backend/AuthContext";
+import supabase from "../../supabaseClient";
+import { useProfile } from "../../hooks/useProfile";
 
 type AuthMode = "signup" | "login";
 
@@ -36,6 +39,15 @@ type SignupFields = z.infer<typeof signupSchema>;
 type LoginFields = z.infer<typeof loginSchema>;
 
 function SellerAccount() {
+  const {
+    signInWithEmail,
+    signUpWithEmail,
+    loading: authLoading,
+    error: authError,
+    user,
+  } = useAuth();
+  const { profile: userProfile } = useProfile();
+  const [profileLoaded, setProfileLoaded] = useState(false);
   const [active, setActive] = useState<AuthMode>("signup");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const navigate = useNavigate();
@@ -48,25 +60,79 @@ function SellerAccount() {
     resolver: zodResolver(loginSchema),
   });
 
+  // If already logged in, redirect away from login/signup page
+  useEffect(() => {
+    if (userProfile && !profileLoaded) {
+      setProfileLoaded(true);
+      if (userProfile.is_seller) {
+        navigate("/seller-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+    }
+  }, [userProfile]);
+
   const handleSignupSubmit: SubmitHandler<SignupFields> = async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("signup", data);
+      // Call auth context to sign up
+      await signUpWithEmail(data.email, data.password);
+
+      // Try to read the current session for the new user
+      const { data: sessionResp, error: sessionErr } =
+        await supabase.auth.getSession();
+      if (sessionErr) throw sessionErr;
+      const session = (sessionResp as any).session;
+      const authUser = session?.user ?? null;
+
+      if (!authUser) {
+        // If email confirmation is required, inform the user
+        signupForm.setError("root", {
+          message:
+            "Signup initiated. Please check your email to confirm. After confirming, sign in to complete profile creation.",
+        });
+        return;
+      }
+
+      // Insert profile
+      const { error: insertErr } = await supabase.from("Profiles").insert([
+        {
+          first_name: data.sellerName.split(" ")[0],
+          last_name: data.sellerName.split(" ")[1] || "",
+          email: data.email,
+          auth_id: authUser.id,
+          country_name: data.country,
+          phone_no: data.phoneNumber,
+          postcode: data.postcode,
+          is_seller: true,
+        },
+      ]);
+      if (insertErr) throw insertErr;
+
       navigate("/seller-dashboard");
-    } catch (error) {
-      signupForm.setError("root", { message: "This email is already taken" });
+    } catch (err: any) {
+      const message = (err && err.message) || authError || "Signup failed";
+      signupForm.setError("root", { message });
     }
   };
 
   const handleLoginSubmit: SubmitHandler<LoginFields> = async (data) => {
     try {
+      console.log("Logging in with");
       setShowForgotPassword(false); // Reset on new attempt
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("login", data);
-      navigate("/seller-dashboard");
-    } catch (error) {
+      await signInWithEmail(data.email, data.password);
+      if (user) {
+        console.log("Logged in user:", user);
+        navigate("/seller-dashboard");
+      } else {
+        setShowForgotPassword(true);
+        loginForm.setError("root", {
+          message: authError || "Login failed. Please try again.",
+        });
+      }
+    } catch (err: any) {
+      const message = (err && err.message) || authError || "Login failed";
       setShowForgotPassword(true);
-      loginForm.setError("root", { message: "Incorrect email or password" });
+      loginForm.setError("root", { message });
     }
   };
 
@@ -77,7 +143,7 @@ function SellerAccount() {
         style={{ backgroundImage: "url('./bg.png')" }}
       ></div>
 
-      <div className="flex-[5] bg-whtie items-center justify-center flex">  
+      <div className="flex-[5] bg-whtie items-center justify-center flex">
         <div className="m-5 bg-[#E3DBD9]/50 p-6 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="m-5 flex flex-col items-center">
@@ -88,11 +154,10 @@ function SellerAccount() {
                     setActive("signup");
                     setShowForgotPassword(false);
                   }}
-                  className={`flex-1 font-bold font-poppins ${
-                    active === "signup"
-                      ? "bg-black text-white"
-                      : "bg-white text-black"
-                  }`}
+                  className={`flex-1 font-bold font-poppins ${active === "signup"
+                    ? "bg-black text-white"
+                    : "bg-white text-black"
+                    }`}
                 >
                   Sign up
                 </button>
@@ -103,11 +168,10 @@ function SellerAccount() {
                     setActive("login");
                     setShowForgotPassword(false);
                   }}
-                  className={`flex-1 font-bold font-poppins ${
-                    active === "login"
-                      ? "bg-black text-white"
-                      : "bg-white text-black"
-                  }`}
+                  className={`flex-1 font-bold font-poppins ${active === "login"
+                    ? "bg-black text-white"
+                    : "bg-white text-black"
+                    }`}
                 >
                   Log in
                 </button>
@@ -240,40 +304,40 @@ function SellerAccount() {
                     </div>
 
                     {/* password */}
-                  <div className="mt-4">
-                    <label className="block font-poppins text-sm font-medium mb-1">
-                      Password
-                    </label>
-                    <input
-                      {...signupForm.register("password")}
-                      type="password"
-                      placeholder="Password"
-                      className="border w-170 p-2 rounded-lg"
-                    />
-                    {signupForm.formState.errors.password && (
-                      <p className="text-red-500 text-sm">
-                        {signupForm.formState.errors.password.message}
-                      </p>
-                    )}
-                  </div>
+                    <div className="mt-4">
+                      <label className="block font-poppins text-sm font-medium mb-1">
+                        Password
+                      </label>
+                      <input
+                        {...signupForm.register("password")}
+                        type="password"
+                        placeholder="Password"
+                        className="border w-170 p-2 rounded-lg"
+                      />
+                      {signupForm.formState.errors.password && (
+                        <p className="text-red-500 text-sm">
+                          {signupForm.formState.errors.password.message}
+                        </p>
+                      )}
+                    </div>
 
-                  {/* confirm password */}
-                  <div className="mt-4">
-                    <label className="block font-poppins text-sm font-medium mb-1">
-                      Confirm Password
-                    </label>
-                    <input
-                      {...signupForm.register("confirmPassword")}
-                      type="password"
-                      placeholder="Confirm Password"
-                      className="border w-170 p-2 rounded-lg"
-                    />
-                    {signupForm.formState.errors.confirmPassword && (
-                      <p className="text-red-500 text-sm">
-                        {signupForm.formState.errors.confirmPassword.message}
-                      </p>
-                    )}
-                  </div>
+                    {/* confirm password */}
+                    <div className="mt-4">
+                      <label className="block font-poppins text-sm font-medium mb-1">
+                        Confirm Password
+                      </label>
+                      <input
+                        {...signupForm.register("confirmPassword")}
+                        type="password"
+                        placeholder="Confirm Password"
+                        className="border w-170 p-2 rounded-lg"
+                      />
+                      {signupForm.formState.errors.confirmPassword && (
+                        <p className="text-red-500 text-sm">
+                          {signupForm.formState.errors.confirmPassword.message}
+                        </p>
+                      )}
+                    </div>
 
                     {/* submit button */}
                     <div className="flex mt-10 items-center">

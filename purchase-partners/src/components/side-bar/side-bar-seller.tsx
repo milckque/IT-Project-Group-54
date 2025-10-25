@@ -1,8 +1,8 @@
 import SideBarItem from "./side-bar-item";
 import { forwardRef } from "react";
-import "./side-bar.css";
 import { useAuth } from "../../backend/AuthContext";
 import { useProfile } from "../../hooks/useProfile";
+import { useNavigate } from "react-router-dom";
 
 // css to handle the sliding in and out of the sidebar
 const width = 20; // Width in rem
@@ -16,6 +16,7 @@ const SideBarSeller = forwardRef<HTMLDivElement, { isOpen?: boolean }>(
   ({ isOpen = false }, ref) => {
     const { signOut, loading, user } = useAuth();
     const { profile } = useProfile();
+    const navigate = useNavigate();
     return (
       <div
         ref={ref}
@@ -38,7 +39,7 @@ const SideBarSeller = forwardRef<HTMLDivElement, { isOpen?: boolean }>(
                 onClick={async (e) => {
                   e.preventDefault();
                   await signOut();
-                  window.location.reload();
+                  navigate("/login");
                 }}
               />
             </div>
