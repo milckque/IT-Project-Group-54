@@ -1,62 +1,16 @@
+import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/navbar";
-import SellerOffersBar from "../../components/seller-bar/seller-bar";
+import supabase from "../../supabaseClient";
 import SearchNavBarSeller from "../../components/search-nav-bar/search-nav-bar-seller";
 import SellerOfferCard from "./seller-offer-card";
 // import type { ProductOffer } from "./seller-offer-card";
 import FilterBar from "../../components/filter-bar/filter-bar";
 import { useProfile } from "../../hooks/useProfile";
 import { useNavigate } from "react-router-dom";
-import { fetchGroupsDetails } from "../../utils/buyingGroupDetails";
-import type { BuyingGroupDetails } from "../../utils/buyingGroupDetails";
-import { use, useEffect, useState } from "react";
 import { fetchCompleteBuyingGroup } from "../../utils/buyingGroupDetails";
 import type { CompleteBuyingGroupInfo } from "../../types/api";
 import type { Categories } from "../../types/api";
-import supabase from "../../supabaseClient";
 
-// Sample data for product offers
-// const productOffers: ProductOffer[] = [
-//   {
-//     id: 1,
-//     category: "Mobile phones",
-//     name: "iPhone 17 Pro",
-//     joined: 2123,
-//     offers: 2,
-//     expired: "19/10/25",
-//     hasOffer: true,
-//     bookmarked: true,
-//   },
-//   {
-//     id: 2,
-//     category: "Mobile phones",
-//     name: "iPhone 17",
-//     joined: 1301,
-//     offers: 1,
-//     expired: "30/10/25",
-//     hasOffer: true,
-//     bookmarked: false,
-//   },
-//   {
-//     id: 3,
-//     category: "Mobile phones",
-//     name: "Samsung Galaxy S25 Ultra",
-//     joined: 806,
-//     offers: 1,
-//     expired: "15/10/25",
-//     hasOffer: false,
-//     bookmarked: false,
-//   },
-//   {
-//     id: 4,
-//     category: "Mobile phones",
-//     name: "Samsung Galaxy Z Flip7 5G",
-//     joined: 803,
-//     offers: 0,
-//     expired: "18/10/25",
-//     hasOffer: false,
-//     bookmarked: false,
-//   },
-// ];
 
 function SellerDashboard() {
   const { profile, error } = useProfile();
@@ -178,7 +132,11 @@ function SellerDashboard() {
         data={groups}
         onSearchResults={handleSearchResults}
       />
-      <FilterBar />
+      <FilterBar
+        categories={categories}
+        groups={groups}
+        onFilterChange={handleFilterChange}
+      />
 
       <div className="grid grid-cols-2 gap-8 p-8">
         {filteredGroups.map((item) => (
