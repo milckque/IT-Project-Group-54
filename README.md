@@ -19,7 +19,7 @@ cd purchase-partners
 *Navigating to the right folder may not be as simple as the command above, depending on where you cloned or extracted the project.*
 This is an example if you want to use the full path (Windows example). You can get this path by right-clicking the folder and selecting "Copy as path".
 ```sh
-cd C:\Users\YourUsername\Downloads\IT-Project-Group-54\purchase-partners
+cd "C:\Users\YourUsername\Downloads\IT-Project-Group-54\purchase-partners"
 ```
 
 3. **Install dependencies**
